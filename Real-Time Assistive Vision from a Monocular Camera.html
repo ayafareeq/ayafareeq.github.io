@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']]
+    }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Real-Time Assistive Vision from a Monocular Camera — Aya Aqeel Fareeq</title>
+<meta name="description" content="Detecting humans, doors and obstacles for the visually impaired." />
+<style>
+  :root{
+    --ink:#111111;
+    --serif: Helvetica, Arial, sans-serif;
+    --pad: 18px;
+    --size: 15px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:var(--serif);font-size:var(--size);line-height:1.25;
+    -webkit-font-smoothing:antialiased;padding:var(--pad) var(--pad) 60px;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  .bar{position:relative;height:22px;}
+  .bar .title{position:absolute;left:0;top:0;}
+  .bar .toggle{position:absolute;left:50%;top:0;transform:translateX(-50%);
+    background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--serif);font-size:var(--size);color:var(--ink);}
+  .bar .close{position:absolute;right:0;top:-2px;font-size:19px;line-height:1;}
+  .bar .close:hover,.bar .toggle:hover{opacity:.45;}
+
+  .details{display:none;margin:24px 0 0;}
+  .details.open{display:grid;grid-template-columns:300px minmax(0,620px);gap:0 44px;
+    justify-content:center;align-items:start;}
+
+  .meta{display:grid;grid-template-columns:auto 1fr;gap:0 18px;
+        align-content:start;grid-auto-rows:min-content;
+        font-size:14px;line-height:1.5;}
+  .meta dt{margin:0;}
+  .meta dd{margin:0;}
+  .meta .gap{grid-column:1 / -1;height:14px;}
+  .meta a{text-decoration:underline;text-underline-offset:2px;}
+
+  .prose{font-size:14px;line-height:1.5;}
+  .prose p{margin:0 0 14px;}
+  .prose h2{font-size:14px;font-weight:400;font-style:italic;margin:20px 0 6px;}
+  .prose ul{margin:0 0 14px;padding-left:16px;}
+  .prose li{margin-bottom:5px;}
+
+  .gallery{margin:34px auto 0;max-width:1120px;text-align:center;}
+  .gallery figure{margin:0;}
+  .gallery img{max-width:100%;max-height:76vh;display:block;margin:0 auto;cursor:pointer;}
+  .count{margin-top:14px;font-size:14px;}
+
+
+  .github-link{position:fixed;left:18px;bottom:16px;font-size:14px;
+    text-decoration:underline;text-underline-offset:2px;}
+  .github-link:hover{opacity:.45;}
+
+
+  @media(max-width:900px){
+    .details.open{grid-template-columns:1fr;gap:22px;}
+    .bar{height:auto;display:flex;flex-direction:column;gap:10px;}
+    .bar .title,.bar .toggle,.bar .close{position:static;transform:none;text-align:left;}
+    .bar .close{align-self:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="title">Real-Time Assistive Vision from a Monocular Camera</span>
+  <button class="toggle" id="toggle" type="button" aria-expanded="false">Details<span id="sign"> +</span></button>
+  <a class="close" href="../index.html" aria-label="Back to the map">✕</a>
+</div>
+
+<div class="details" id="details">
+
+  <dl class="meta">
+    <dt>Year:</dt><dd>2026</dd>
+    <dt>Category:</dt><dd>Computer Vision, Assistive Technology</dd>
+    <div class="gap"></div>
+    <dt>Type:</dt><dd>Independent Project</dd>
+    <dt>Tools:</dt><dd>YOLOv8, OpenCV, Python</dd>
+  </dl>
+
+  <div class="prose">
+    <p>This project was the foundation of a real-time assistive vision aid system.
+      Video stream from a computer's built-in camera was used to detect humans and some static indoor obstacles
+      such as furniture and doors, distance of objects was estimated from the video stream, and a voice alert was triggered.
+      The project was built using Python with OpenCV, Ultralytics/PyTorch, and NumPy.</p>
+    <p>The pipeline ran four stages per frame:
+       <p>(1) Frame was acquired via OpenCV (cv2.VideoCapture)</p>
+       <p>(2) Hybrid detection was then used, the mechanism combined a learned single-stage detector - YOLOv8-nano (Ultralytics), pre-trained on
+       MS-COCO - for humans and common obstacles, and a model-free classical
+       heuristic (Gaussian blur -> Canny edges -> morphological dilation -> contour extraction ->
+       polygonal approximation, filtered by aspect ratio and area) for doors,
+       as COCO does not cover that class.</p>
+       <p>(3) The monocular distance was estimated using the pinhole camera model under a similar-triangles
+         assumption, \(d = \frac{H_{\text{real}} \times f_{\text{px}}}{h_{\text{box}}}\), from a calibrated focal length and a known per-class object height. </p>
+       <p>(4) A voice alert was triggered using the macOS say TTS (text-to-speech) engine, which ran on a background worker
+       thread with a per-object cooldown so speech didn't block the video loop or
+       repeat unnecessarily.</p>
+
+
+    <h2>Highlights</h2>
+    <ul>
+      <li>Hybrid detection - YOLOv8 was paired with a classical geometric heuristic to cover doors.</li>
+      <li>The depth was estimated in metres from a single camera, with no stereo rig or active depth sensor, lowering the system costs.</li>
+      <li>The perception and speech synthesis were run on separate threads, so they didn't interfere with each other.</li>
+      <li>Eyes-free and hands-free operation, the alerts were done via voice synthesis.</li>
+    </ul>
+
+    <h2>Results</h2>
+    <ul>
+      <li>The real-time pipeline demonstrated live detection, bounding-box localization, distance readout, and synchronized spoken alerts successfully.</li>
+      <li>Reliable detection of people and in-vocabulary COCO obstacles (chair, couch, table, TV, refrigerator, etc.) at low frame rates on a MacBook CPU.</li>
+      <li>The pinhole estimator produced decent metric distances after calibration of the focal length against a reference object of known size and range.</li>
+      <li>Door detection was validated on tall rectangular structures via the geometric heuristic.</li>
+      <li>Audio delivery was reliable with a threaded queue and per-object cooldown eliminating announcement flooding and frame-loop stalls.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>Qualitative results. The system was not tested against a labelled dataset or ground-truth depth, so no quantitative accuracy (mAP) or distance-error metrics were reported.</li>
+      <li>Because the door detection was heuristic, not learned, it was sensitive to lighting, viewpoint, and clutter, and it produced false positives on other tall rectangles (cabinets, windows, posters).</li>
+      <li>The distance calculations were based on assumptions; accurate results required a calibrated focal length and a fixed canonical height for each class.</li>
+      <li>The vocabulary was limited to the 80 MS-COCO classes.</li>
+      <li>With no stereo baseline or motion parallax, depth was measured purely from apparent size, which could be inaccurate.</li>
+      <li>There was no temporal tracking; detection was per-frame only.</li>
+      <li>The system performed poorly in low light, motion blur, and crowded scenes.</li>
+      <li>The detections were announced independently and not ranked by proximity or risk.</li>
+    </ul>
+  </div>
+
+</div>
+
+<a class="github-link" href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a>
+
+
+
+<div class="gallery" id="gallery">
+  <figure>
+    <img id="shot" alt="Assembled inchworm-inspired soft robot prototype" />
+  </figure>
+  <div class="count" id="count">1/1</div>
+</div>
+
+<script>
+(function(){
+  const images = [
+    "/Users/avaley/Downloads/Will-Handley-artist-Plant-Data-Porto-2021-2.jpg"
+  ];
+
+  const gallery = document.getElementById('gallery');
+  const shot    = document.getElementById('shot');
+  const count   = document.getElementById('count');
+  let list = images.slice();
+  let i = 0;
+
+  function hideGallery(){
+    gallery.hidden = true;
+    gallery.style.display = 'none';
+  }
+
+  function show(n){
+    if (!list.length) return hideGallery();
+    i = (n + list.length) % list.length;
+    shot.src = list[i];
+    count.textContent = (i + 1) + '/' + list.length;
+    count.hidden = list.length < 2;   
+  }
+
+  shot.addEventListener('error', () => {
+    list.splice(i, 1);                
+    if (!list.length) hideGallery();
+    else show(i);
+  });
+  shot.addEventListener('click', () => show(i + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(i + 1);
+    if (e.key === 'ArrowLeft')  show(i - 1);
+    if (e.key === 'Escape') window.location.href = '../index.html';
+  });
+
+  show(0);
+
+  const details = document.getElementById('details');
+  const toggle  = document.getElementById('toggle');
+  const sign    = document.getElementById('sign');
+  toggle.addEventListener('click', () => {
+    const open = details.classList.toggle('open');
+    sign.textContent = open ? ' –' : ' +';
+    toggle.setAttribute('aria-expanded', open);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Soft Robot for Pipe Inspection </title>
+<meta name="description" content="Textile sensors, pneumatic actuation and closed-loop control in a bio-inspired inchworm robot." />
+<style>
+  :root{
+    --ink:#111111;
+    --serif: Helvetica, Arial, sans-serif;
+    --pad: 18px;
+    --size: 15px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:var(--serif);font-size:var(--size);line-height:1.25;
+    -webkit-font-smoothing:antialiased;padding:var(--pad) var(--pad) 60px;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  .bar{position:relative;height:22px;}
+  .bar .title{position:absolute;left:0;top:0;}
+  .bar .toggle{position:absolute;left:50%;top:0;transform:translateX(-50%);
+    background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--serif);font-size:var(--size);color:var(--ink);}
+  .bar .close{position:absolute;right:0;top:-2px;font-size:19px;line-height:1;}
+  .bar .close:hover,.bar .toggle:hover{opacity:.45;}
+
+  .details{display:none;margin:24px 0 0;}
+  .details.open{display:grid;grid-template-columns:300px minmax(0,620px);gap:0 44px;
+    justify-content:center;align-items:start;}
+
+  .meta{display:grid;grid-template-columns:auto 1fr;gap:0 18px;
+        align-content:start;grid-auto-rows:min-content;
+        font-size:14px;line-height:1.5;}
+  .meta dt{margin:0;}
+  .meta dd{margin:0;}
+  .meta .gap{grid-column:1 / -1;height:14px;}
+  .meta a{text-decoration:underline;text-underline-offset:2px;}
+
+  .prose{font-size:14px;line-height:1.5;}
+  .prose p{margin:0 0 14px;}
+  .prose h2{font-size:14px;font-weight:400;font-style:italic;margin:20px 0 6px;}
+  .prose ul{margin:0 0 14px;padding-left:16px;}
+  .prose li{margin-bottom:5px;}
+
+  .gallery{margin:34px auto 0;max-width:1120px;text-align:center;}
+  .gallery figure{margin:0;}
+  .gallery img{max-width:100%;max-height:76vh;display:block;margin:0 auto;cursor:pointer;}
+  .count{margin-top:14px;font-size:14px;}
+
+  .github-link{position:fixed;left:18px;bottom:16px;font-size:14px;
+    text-decoration:underline;text-underline-offset:2px;}
+  .github-link:hover{opacity:.45;}
+
+  @media(max-width:900px){
+    .details.open{grid-template-columns:1fr;gap:22px;}
+    .bar{height:auto;display:flex;flex-direction:column;gap:10px;}
+    .bar .title,.bar .toggle,.bar .close{position:static;transform:none;text-align:left;}
+    .bar .close{align-self:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="title">Soft Robotics for Pipe Inspection</span>
+  <button class="toggle" id="toggle" type="button" aria-expanded="false">Details<span id="sign"> +</span></button>
+  <a class="close" href="../index.html" aria-label="Back to the map">✕</a>
+</div>
+
+<div class="details" id="details">
+
+  <dl class="meta">
+    <dt>Year:</dt><dd>2024 - 2025</dd>
+    <dt>Category:</dt><dd>Soft robotics, sensing, control</dd>
+    <div class="gap"></div>
+    <dt>Type:</dt><dd>MECH3895 Individual Project</dd>
+    <dt>Tools:</dt><dd>SolidWorks, MATLAB,<br/>KiCad, Arduino,<br/> silicone casting, 3D printing</dd>
+  </dl>
+
+  <div class="prose">
+    <p>This project aimed at investigating the validity of using low-cost, commercially available conductive
+    textile as reliable sensors for proprioceptive feedback in soft robotics, the investigation was done on a bio-inspired
+    inchworm robot for pipeline inspection. Soft robots are best suited for confined, irregular
+    tubular environments where rigid inspection tools fail, but they lack effective
+    internal sensing because stiff sensors compromise their compliance.</p>
+
+    <p>The project combined experimental sensor characterisation, numerical analysis of the silicone hyperelasticity, mechanical design and
+    fabrication, and embedded control to build and test a three-chamber pneumatically
+    actuated inchworm robot with an onboard endoscope.</p>
+
+    <h2>Highlights</h2>
+    <ul>
+      <li>Electromechanical characterisation of three silver-coated knitted fabrics
+          across strain axis, sensor length and width, and signal filtering was done successfully.</li>
+      <li>Custom signal conditioning - constant-current sources and Sallen-Key active
+          low-pass filters, scaled to an eight-sensor array circuits were built.</li>
+      <li>Mooney-Rivlin hyperelastic modelling of the silicone actuators was implemented
+          and validated in MATLAB.</li>
+      <li>Discrete-time PID controller was simulated in MATLAB, deployed on an Arduino
+          Mega alongside bang-bang logic and tested on a balloon.</li>
+    </ul>
+
+    <h2>Results</h2>
+    <ul>
+      <li>ElectroLycra proved the most repeatable fabric, tolerant of strain beyond its
+          rated limit due to a uniform loop structure.</li>
+      <li>Course-direction strain gave the most usable sensing range across all
+          three fabrics.</li>
+      <li>The PID controller converged with a stable, damped response
+          (K<sub>p</sub>=2, K<sub>d</sub>=0.6, K<sub>i</sub>=1) and ran correctly on hardware.</li>
+      <li>Structure, actuators and three-phase locomotion logic were all designed,
+          fabricated and coded.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>The fabric resistance was very low causing near-short conditions that overloaded the
+          conditioning circuits when embedded.</li>
+      <li>The use of incompatible adhesive damaged the conductive paths, and mould inaccuracies caused
+          persistent air leaks.</li>
+      <li>There was no full-system demonstration due to insufficient actuator inflation. The closed-loop
+          control was validated on a balloon instead.</li>
+      <li>The endoscope feed was viewed raw, with no image processing due to the project's time limitations.</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="gallery" id="gallery">
+  <figure>
+    <img id="shot" alt="Process board for the pipeline robot" />
+  </figure>
+  <div class="count" id="count">1/1</div>
+</div>
+
+<a class="github-link" href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a>
+
+
+<script>
+(function(){
+  const images = [
+    "/Users/avaley/Downloads/Pipeline-Robot-Process-Board-2.png"
+  ];
+
+  const gallery = document.getElementById('gallery');
+  const shot    = document.getElementById('shot');
+  const count   = document.getElementById('count');
+  let list = images.slice();
+  let i = 0;
+
+  function hideGallery(){
+    gallery.hidden = true;
+    gallery.style.display = 'none';
+  }
+
+  function show(n){
+    if (!list.length) return hideGallery();
+    i = (n + list.length) % list.length;
+    shot.src = list[i];
+    count.textContent = (i + 1) + '/' + list.length;
+    count.hidden = list.length < 2;   
+  }
+
+  shot.addEventListener('error', () => {
+    list.splice(i, 1);                
+    if (!list.length) hideGallery();
+    else show(i);
+  });
+  shot.addEventListener('click', () => show(i + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(i + 1);
+    if (e.key === 'ArrowLeft')  show(i - 1);
+    if (e.key === 'Escape') window.location.href = '../index.html';
+  });
+
+  show(0);
+
+  const details = document.getElementById('details');
+  const toggle  = document.getElementById('toggle');
+  const sign    = document.getElementById('sign');
+  toggle.addEventListener('click', () => {
+    const open = details.classList.toggle('open');
+    sign.textContent = open ? ' –' : ' +';
+    toggle.setAttribute('aria-expanded', open);
+  });
+})();
+</script>
+</body>
+</html>

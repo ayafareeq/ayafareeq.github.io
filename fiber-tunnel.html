@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Professional Work — Aya Aqeel Fareeq</title>
+<meta name="description" content="Solution architectures developed." />
+<style>
+  :root{
+    --ink:#111111;
+    --serif: Helvetica, Arial, sans-serif;
+    --pad: 18px;
+    --size: 15px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:var(--serif);font-size:var(--size);line-height:1.25;
+    -webkit-font-smoothing:antialiased;padding:var(--pad) var(--pad) 60px;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  .bar{position:relative;height:22px;}
+  .bar .title{position:absolute;left:0;top:0;}
+  .bar .toggle{position:absolute;left:50%;top:0;transform:translateX(-50%);
+    background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--serif);font-size:var(--size);color:var(--ink);}
+  .bar .close{position:absolute;right:0;top:-2px;font-size:19px;line-height:1;}
+  .bar .close:hover,.bar .toggle:hover{opacity:.45;}
+
+  .details{display:none;margin:24px 0 0;}
+  .details.open{display:grid;grid-template-columns:300px minmax(0,620px);gap:0 44px;
+    justify-content:center;align-items:start;}
+
+  .meta{display:grid;grid-template-columns:auto 1fr;gap:0 18px;
+        align-content:start;grid-auto-rows:min-content;
+        font-size:14px;line-height:1.5;}
+  .meta dt{margin:0;}
+  .meta dd{margin:0;}
+  .meta .gap{grid-column:1 / -1;height:14px;}
+  .meta a{text-decoration:underline;text-underline-offset:2px;}
+
+  .prose{font-size:14px;line-height:1.5;}
+  .prose p{margin:0 0 14px;}
+  .prose h2{font-size:14px;font-weight:400;font-style:italic;margin:20px 0 6px;}
+  .prose ul{margin:0 0 14px;padding-left:16px;}
+  .prose li{margin-bottom:5px;}
+
+  .gallery{margin:34px auto 0;max-width:1120px;text-align:center;}
+  .gallery figure{margin:0;}
+  .gallery img{max-width:100%;max-height:76vh;display:block;margin:0 auto;cursor:pointer;}
+  .count{margin-top:14px;font-size:14px;}
+
+  @media(max-width:900px){
+    .details.open{grid-template-columns:1fr;gap:22px;}
+    .bar{height:auto;display:flex;flex-direction:column;gap:10px;}
+    .bar .title,.bar .toggle,.bar .close{position:static;transform:none;text-align:left;}
+    .bar .close{align-self:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="title">Professional Work</span>
+  <button class="toggle" id="toggle" type="button" aria-expanded="false">Details<span id="sign"> +</span></button>
+  <a class="close" href="../index.html" aria-label="Back to the map">✕</a>
+</div>
+
+<div class="details" id="details">
+
+  <dl class="meta">
+    <dt>Year:</dt><dd>2026 — present</dd>
+    <dt>Category:</dt><dd>Solution Architecture</dd>
+    <div class="gap"></div>
+    <dt>Type:</dt><dd>Professional</dd>
+    <dt>Role:</dt><dd>Solutions Engineer</dd>
+  </dl>
+
+  <div class="prose">
+    <ul> Solution architectures developed and technically presented to clients in a Pre-Sales Engineering role. Details are limited due to client confidentiality requirements:.
+      <li>Seismic Data Backup & Archival Solution - Automated backup and long-term archival of large-scale seismic data.</li>
+      <li>Smart Border Security & Detection System - Intelligent security, monitoring, and detection architecture.</li>
+      <li>Centralized Data Management & Data Center Solution - Centralized infrastructure and data management architecture.</li>
+      <li>Digital Examination Platform - Secure, scalable architecture for large-scale digital examinations.</li>
+      <li>Smart Asset Management & Alerting System - Data center assets monitoring, management, and mobile alerting solution.</li>
+    </ul>
+
+  </div>
+
+</div>
+
+<div class="gallery" id="gallery">
+  <figure>
+    <img id="shot" alt="Assembled inchworm-inspired soft robot prototype" />
+  </figure>
+  <div class="count" id="count">1/1</div>
+</div>
+
+
+<script>
+(function(){
+  const images = [
+    "../images/das-border-security.jpg"
+  ];
+
+  const shot    = document.getElementById('shot');
+  const missing = document.getElementById('missing');
+  const count   = document.getElementById('count');
+  let i = 0;
+
+  function show(n){
+    i = (n + images.length) % images.length;
+    shot.src = images[i];
+    count.textContent = (i + 1) + '/' + images.length;
+  }
+  shot.addEventListener('error', () => { shot.hidden = true; missing.hidden = false; });
+  shot.addEventListener('load',  () => { shot.hidden = false; missing.hidden = true; });
+  shot.addEventListener('click', () => show(i + 1));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(i + 1);
+    if (e.key === 'ArrowLeft')  show(i - 1);
+    if (e.key === 'Escape') window.location.href = '../index.html';
+  });
+  show(0);
+
+  const details = document.getElementById('details');
+  const toggle  = document.getElementById('toggle');
+  const sign    = document.getElementById('sign');
+  toggle.addEventListener('click', () => {
+    const open = details.classList.toggle('open');
+    sign.textContent = open ? ' –' : ' +';
+    toggle.setAttribute('aria-expanded', open);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']]
+    }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Myoelectric Control from EMG — Aya Aqeel Fareeq</title>
+<meta name="description" content="Decoding intended hand gestures from surface EMG." />
+<style>
+  :root{
+    --ink:#111111;
+    --serif: Helvetica, Arial, sans-serif;
+    --pad: 18px;
+    --size: 15px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:var(--serif);font-size:var(--size);line-height:1.25;
+    -webkit-font-smoothing:antialiased;padding:var(--pad) var(--pad) 60px;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  .bar{position:relative;height:22px;}
+  .bar .title{position:absolute;left:0;top:0;}
+  .bar .toggle{position:absolute;left:50%;top:0;transform:translateX(-50%);
+    background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--serif);font-size:var(--size);color:var(--ink);}
+  .bar .close{position:absolute;right:0;top:-2px;font-size:19px;line-height:1;}
+  .bar .close:hover,.bar .toggle:hover{opacity:.45;}
+
+  .details{display:none;margin:24px 0 0;}
+  .details.open{display:grid;grid-template-columns:300px minmax(0,620px);gap:0 44px;
+    justify-content:center;align-items:start;}
+
+  .meta{display:grid;grid-template-columns:auto 1fr;gap:0 18px;
+        align-content:start;grid-auto-rows:min-content;
+        font-size:14px;line-height:1.5;}
+  .meta dt{margin:0;}
+  .meta dd{margin:0;}
+  .meta .gap{grid-column:1 / -1;height:14px;}
+  .meta a{text-decoration:underline;text-underline-offset:2px;}
+
+  .prose{font-size:14px;line-height:1.5;}
+  .prose p{margin:0 0 14px;}
+  .prose h2{font-size:14px;font-weight:400;font-style:italic;margin:20px 0 6px;}
+  .prose ul{margin:0 0 14px;padding-left:16px;}
+  .prose li{margin-bottom:5px;}
+
+  table.results{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0 14px;}
+  table.results th,
+  table.results td{border-bottom:1px solid #E6E6E6;padding:7px 12px 7px 0;text-align:left;}
+  table.results thead th{font-weight:400;font-style:italic;vertical-align:bottom;}
+  table.results th:not(:first-child),
+  table.results td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;
+    padding-right:0;padding-left:18px;}
+  table.results tbody tr:last-child td{border-bottom:none;}
+
+  .gallery{margin:34px auto 0;max-width:1120px;text-align:center;}
+  .gallery figure{margin:0;}
+  .gallery img{max-width:100%;max-height:76vh;display:block;margin:0 auto;cursor:pointer;}
+  .count{margin-top:14px;font-size:14px;}
+
+  .github-link{position:fixed;left:18px;bottom:16px;font-size:14px;
+    text-decoration:underline;text-underline-offset:2px;}
+  .github-link:hover{opacity:.45;}
+
+  @media(max-width:900px){
+    .details.open{grid-template-columns:1fr;gap:22px;}
+    .bar{height:auto;display:flex;flex-direction:column;gap:10px;}
+    .bar .title,.bar .toggle,.bar .close{position:static;transform:none;text-align:left;}
+    .bar .close{align-self:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="title">Myoelectric Control from EMG</span>
+  <button class="toggle" id="toggle" type="button" aria-expanded="false">Details<span id="sign"> +</span></button>
+  <a class="close" href="../index.html" aria-label="Back to the map">✕</a>
+</div>
+
+<div class="details" id="details">
+
+  <dl class="meta">
+    <dt>Year:</dt><dd>2025</dd>
+    <dt>Category:</dt><dd>Biomedical, machine learning,<br/>control</dd>
+    <div class="gap"></div>
+    <dt>Type:</dt><dd>Independent Project</dd>
+    <dt>Tools:</dt><dd>scikit-learn, MiniRocket,<br/>NumPy, SciPy</dd>
+  </dl>
+
+
+  <div class="prose">
+    <p>The project implemented a myoelectric pattern-recognition pipeline, decoding movement intent for upper-limb 
+      prostheses from short windows of multichannel surface EMG (sEMG). It inferred the intended hand or wrist gesture 
+      and converted the prediction into stable actuator commands. </p>
+    <p>Formally, it learned a
+      mapping $\phi: \mathbb{R}^{L \times C} \to {1,\dots,G}$ from an $L$-sample, $C$-channel window to one of $G$ gestures, followed
+      by a control policy $\pi$ that temporally regularized the predictions before they drove a device.
+      The pipeline: zero-phase Butterworth band-pass (20–450 Hz) and IIR notch conditioning ->  overlapping sliding windows
+      (200 ms / 50 ms stride) -> Hudgins time-domain features (MAV, RMS, WL, ZC, SSC) per channel ->  classification, benchmarking
+      Linear Discriminant Analysis against SVM, Random Forest, and MiniRocket (convolutional kernels on raw windows) ->
+      confidence-based rejection and causal majority-vote smoothing. </p>
+    <p>It was built in Python (NumPy, SciPy, scikit-learn, aeon,
+      pandas, Matplotlib) and ran end-to-end on a synthetic generator with no data download.
+    </p>
+
+    <h2>Highlights
+     <ul>
+       <li>End-to-end and reproducible: raw signal to smoothed control decisions, it is runnable offline on synthetic data and switchable to real Ninapro data via one config change.</li>
+       <li>Two modeling paradigms side by side: feature-engineered classical models vs. feature-free convolutional time-series classification (MiniRocket).</li>
+       <li>Leakage-safe evaluation: splits enforced at the repetition or subject level, never by random window, random splits let overlapping windows leak information across train and test. leave-one-subject-out gave the reliable generalization estimate.</li>
+       <li>Automated benchmarking: swept models x split regimes and emitted a metrics table, per-condition confusion matrices, and an accuracy chart. </li>
+       <li>A control layer: modeled the decision-stabilization step that separated prosthesis control from generic classification.</li>
+       <li>Tested: unit tests validated the feature mathematics against hand-computed values.</li>
+      </ul>
+    </h2>
+    
+    <h2>Results</h2>
+    <ul>
+      <p>On the synthetic benchmark (6 gestures, 12 channels, 4 subjects), reported as raw / policy-smoothed accuracy:</p>
+
+      <table class="results">
+       <thead>
+          <tr>
+           <th scope="col">Model</th>
+           <th scope="col">Within-subject<br/>(repetition split)</th>
+           <th scope="col">Cross-subject<br/>(leave-one-out)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">LDA</th>          <td>0.94 / 0.88</td><td>0.44 / 0.42</td></tr>
+          <tr><th scope="row">SVM</th>          <td>1.00 / 0.93</td><td>0.35 / 0.33</td></tr>
+          <tr><th scope="row">Random Forest</th><td>1.00 / 0.93</td><td>0.30 / 0.29</td></tr>
+          <tr><th scope="row">MiniRocket</th>   <td>1.00 / 0.93</td><td>0.33 / 0.32</td></tr>
+        </tbody>
+      </table>
+    <p style="font-size:13px;">Raw / policy-smoothed accuracy.</p>
+
+      <p>Two findings: (1) Within-subject, all models saturated — which was expected, since the synthetic classes differed mainly in per-channel amplitude.</p>
+      <p>(2) Cross-subject, the accuracy collapsed, and the simple LDA generalized at least as well as the heavier nonlinear models — model complexity did not overcome subject/domain shift.</p>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>No validated human data. Results were on a synthetic generator with near-linearly-separable classes,
+        the ~0.94 within-subject score demonstrated code correctness, not clinical accuracy. Real sEMG confounds — cross-talk, non-stationarity, fatigue — were absent.</li>
+      <li>Offline framing. Zero-phase filtering was non-causal and unusable in real time, the code reported
+        classification accuracy but not end-to-end controller latency, and ran no streaming loop, so the < 300 ms
+        usability constraint was stated but unverified. </li>
+      <li>Accuracy did not equal usability. Evaluation covered only windowed classification metrics, omitting control-oriented
+        measures (target-acquisition completion rate, throughput, Fitts'-law path efficiency). No proportional-control regression path was implemented.</li>
+      <li>No domain adaptation. The cross-subject collapse exposed the core open problem, but there was no recalibration
+        or transfer-learning mechanism to counter electrode shift and session-to-session drift.</li>
+      <li>Feature/model scope. Only time-domain features were wired in (no frequency-domain, AR, or wavelet features), 
+        and no deep architectures beyond ROCKET, MiniRocket yielded only pseudo-probabilities, weakening confidence-based rejection there.</li>
+      <li>Amputee validation was absent. Nothing was run on Ninapro DB3/DB7; intact-subject and amputee EMG differ materially.</li>
+
+    </ul>
+  </div>
+
+</div>
+
+
+
+<div class="gallery" id="gallery">
+  <figure>
+    <img id="shot" alt="Assembled inchworm-inspired soft robot prototype" />
+  </figure>
+  <div class="count" id="count">1/1</div>
+</div>
+
+<a class="github-link" href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a>
+
+
+<script>
+(function(){
+  const images = [
+    "/Users/avaley/Downloads/Will-Handley-artist-Plant-Data-Porto-2021-2.jpg"
+  ];
+
+  const gallery = document.getElementById('gallery');
+  const shot    = document.getElementById('shot');
+  const count   = document.getElementById('count');
+  let list = images.slice();
+  let i = 0;
+
+  function hideGallery(){
+    gallery.hidden = true;
+    gallery.style.display = 'none';
+  }
+
+  function show(n){
+    if (!list.length) return hideGallery();
+    i = (n + list.length) % list.length;
+    shot.src = list[i];
+    count.textContent = (i + 1) + '/' + list.length;
+    count.hidden = list.length < 2;   
+  }
+
+  shot.addEventListener('error', () => {
+    list.splice(i, 1);                
+    if (!list.length) hideGallery();
+    else show(i);
+  });
+  shot.addEventListener('click', () => show(i + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(i + 1);
+    if (e.key === 'ArrowLeft')  show(i - 1);
+    if (e.key === 'Escape') window.location.href = '../index.html';
+  });
+
+  show(0);
+
+  const details = document.getElementById('details');
+  const toggle  = document.getElementById('toggle');
+  const sign    = document.getElementById('sign');
+  toggle.addEventListener('click', () => {
+    const open = details.classList.toggle('open');
+    sign.textContent = open ? ' –' : ' +';
+    toggle.setAttribute('aria-expanded', open);
+  });
+})();
+</script>
+</body>
+</html>

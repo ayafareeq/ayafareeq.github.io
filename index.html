@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aya Aqeel Fareeq</title>
+<meta name="description" content="Aya Aqeel Fareeq — mechatronics and robotics engineer, solutions architect." />
+
+<script>
+  MathJax = { tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  :root{
+    --ink:#111111;
+    --rule:#B9B9B9;
+    --serif: Helvetica, Arial, sans-serif;
+    --pad: 18px;
+    --size: 15px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:var(--serif);font-size:var(--size);line-height:1.25;
+    -webkit-font-smoothing:antialiased;overflow:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  .frame{position:fixed;inset:0;}
+
+  .rule-h{position:absolute;left:46px;right:46px;top:50%;height:1px;background:var(--rule);}
+  .rule-v{position:absolute;top:46px;bottom:46px;left:50%;width:1px;background:var(--rule);}
+
+  .lbl{position:absolute;white-space:nowrap;}
+  .tl{top:var(--pad);left:var(--pad);}
+  .tr{top:var(--pad);right:var(--pad);}
+  .br{bottom:var(--pad);right:var(--pad);}
+  .tc{top:var(--pad);left:50%;transform:translateX(-50%);}
+  .bc{bottom:var(--pad);left:50%;transform:translateX(-50%);}
+
+  .ml{left:var(--pad);top:50%;transform:translate(-50%,-50%) rotate(-90deg);}
+  .mr{right:var(--pad);top:50%;transform:translate(50%,-50%) rotate(90deg);}
+
+  .nav:hover{opacity:.45;}
+
+  .key{position:absolute;left:var(--pad);bottom:var(--pad);
+       font-style:italic;font-size:13px;line-height:1.32;}
+
+  .pt{
+    position:absolute;transform:translate(-50%,-50%);
+    display:block;width:13px;height:13px;border-radius:50%;
+    background:var(--ink);border:0;padding:0;cursor:pointer;
+  }
+  .pt .name{
+    position:absolute;top:50%;left:22px;transform:translateY(-50%);
+    font-family:var(--serif);font-size:14px;color:var(--ink);
+    white-space:nowrap;opacity:1;pointer-events:none;
+  }
+  .pt.flip .name{left:auto;right:22px;}
+
+  .pt .preview{
+    display:block;position:absolute;top:24px;left:0;
+    width: 220px;max-width:60vw;height:auto;
+    border:1px solid var(--rule);background:#fff;
+    opacity:0;visibility:hidden;transition:opacity .12s ease;
+    pointer-events:none;z-index:5;
+  }
+  .pt.flip .preview{left:auto;right:0;}
+  .pt.up .preview{top:auto;bottom:24px;}
+  .pt:hover .preview,.pt:focus-visible .preview{opacity:1;visibility:visible;}
+
+  .pt:focus-visible{outline:1px solid var(--ink);outline-offset:5px;}
+  @media(prefers-reduced-motion:reduce){.pt .preview{transition:none;}}
+
+  .sheet{
+    position:fixed;inset:0;background:#fff;z-index:20;padding:var(--pad);
+    display:none;overflow:auto;
+  }
+  .sheet.open{display:block;}
+  .sheet .close{position:absolute;top:var(--pad);right:var(--pad);z-index:21;
+    font-size:19px;line-height:1;background:none;border:0;cursor:pointer;
+    font-family:var(--serif);color:var(--ink);}
+  .sheet .close:hover{opacity:.45;}
+  .sheet h1{font-size:var(--size);font-weight:400;margin:0;}
+  .sheet .inner{max-width:640px;margin:96px auto 60px;}
+  .sheet .inner p{font-size:15px;line-height:1.5;margin:0 0 16px;}
+  .sheet .inner a{text-decoration:underline;text-underline-offset:2px;}
+  .arch{list-style:none;margin:0;padding:0;}
+  .arch li{padding:5px 0;}
+  .arch .cat{font-style:italic;color:#777;}
+
+  .sheet.project .inner{max-width:1000px;margin:64px auto 60px;}
+  .sheet.project h1{margin-bottom:26px;text-align:center;}
+  .sheet.project .cols{display:grid;grid-template-columns:300px minmax(0,620px);
+    gap:0 44px;justify-content:center;align-items:start;}
+
+  .meta{display:grid;grid-template-columns:auto 1fr;gap:0 18px;
+        align-content:start;grid-auto-rows:min-content;
+        font-size:14px;line-height:1.5;}
+  .meta dt{margin:0;}
+  .meta dd{margin:0;}
+  .meta .gap{grid-column:1 / -1;height:14px;}
+  .meta a{text-decoration:underline;text-underline-offset:2px;}
+
+  .prose{font-size:14px;line-height:1.5;}
+  .sheet.project .inner .prose p{font-size:14px;line-height:1.5;margin:0 0 14px;}
+  .prose h2{font-size:14px;font-weight:400;font-style:italic;margin:20px 0 6px;}
+  .prose ul{margin:0 0 14px;padding-left:16px;}
+  .prose li{margin-bottom:5px;}
+
+  table.results{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0 14px;}
+  table.results th,
+  table.results td{border-bottom:1px solid #E6E6E6;padding:7px 12px 7px 0;text-align:left;}
+  table.results thead th{font-weight:400;font-style:italic;vertical-align:bottom;}
+  table.results th:not(:first-child),
+  table.results td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;
+    padding-right:0;padding-left:18px;}
+  table.results tbody tr:last-child td{border-bottom:none;}
+  table.results td.tbd{color:#B0B0B0;}
+
+  .gallery{margin:34px auto 0;max-width:1000px;text-align:center;}
+  .gallery figure{margin:0;}
+  .gallery img{max-width:100%;max-height:70vh;display:block;margin:0 auto;cursor:pointer;}
+  .count{margin-top:14px;font-size:14px;}
+
+  @media(max-width:900px){
+    .sheet.project .inner{margin-top:56px;}
+    .sheet.project .cols{grid-template-columns:1fr;gap:22px;}
+  }
+
+  .mobile{display:none;padding:64px 18px 40px;}
+  .mobile h1{font-size:15px;font-weight:400;margin:0 0 28px;}
+  .mobile ul{list-style:none;margin:0;padding:0;}
+  .mobile li{padding:11px 0;border-bottom:1px solid #EEE;}
+  .mobile .cat{font-style:italic;color:#777;font-size:13px;}
+
+  @media(max-width:820px), (max-height:520px){
+    body{overflow:auto;}
+    .rule-h,.rule-v,.pt,.ml,.mr,.tc,.bc,.key,.br{display:none;}
+    .mobile{display:block;}
+  }
+</style>
+</head>
+<body>
+
+
+<div class="frame">
+
+  <div class="rule-h"></div>
+  <div class="rule-v"></div>
+
+  <span class="lbl tl">Aya Aqeel Fareeq</span>
+  <a class="lbl tr nav" href="#" id="open-info">Info</a>
+  <a class="lbl br nav" href="#" id="open-archive">Projects</a>
+
+  <span class="lbl tc">Software</span>
+  <span class="lbl bc">Hardware</span>
+  <span class="lbl ml">Human Body</span>
+  <span class="lbl mr">Field</span>
+
+  <div class="key">
+    Interests:<br/>
+    Soft Robotics<br/>
+    Computer Vision<br/>
+    Neural Interfaces<br/>
+    Assistive Systems<br/>
+    Control Systems<br/>
+    Solution Architectures<br/>
+  </div>
+
+  <button class="pt" type="button" data-x="12" data-y="14"
+          data-sheet="p-unet"
+          data-preview="images/unet/qualitative_panel.png"
+          data-cat="Computer Vision">
+    <span class="name">Medical Image Segmentation with U-Net</span>
+  </button>
+
+  <button class="pt" type="button" data-x="21" data-y="27"
+          data-sheet="p-eeg"
+          data-preview="images/eeg/preview.png"
+          data-cat="Neural Interfaces">
+    <span class="name">Decoding Imagined Movement from EEG</span>
+  </button>
+
+  <button class="pt" type="button" data-x="41" data-y="35"
+          data-sheet="p-vision"
+          data-preview="images/vision/preview.png"
+          data-cat="Assistive Systems">
+    <span class="name">Real-Time Assistive Vision</span>
+  </button>
+
+  <button class="pt" type="button" data-x="27" data-y="57"
+          data-sheet="p-emg"
+          data-preview="images/emg/preview.png"
+          data-cat="Control Systems">
+    <span class="name">Myoelectric Control from EMG</span>
+  </button>
+
+  <button class="pt" type="button" data-x="88" data-y="45"
+          data-sheet="p-arch"
+          data-preview="images/arch/preview.png"
+          data-cat="Solution Architectures">
+    <span class="name"> Architectures designed</span>
+  </button>
+
+  <button class="pt" type="button" data-x="80" data-y="86"
+          data-sheet="p-pipe"
+          data-preview="images/pipe/preview.png"
+          data-cat="Soft Robotics">
+    <span class="name">Soft Robotics for Pipe Inspection</span>
+  </button>
+
+</div>
+
+<div class="sheet" id="info">
+  <h1>Aya Aqeel Fareeq</h1>
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <p>Mechatronics and robotics engineer. BEng Mechatronics &amp; Robotics,
+       University of Leeds.</p>
+    <p>
+       Currently designing solution architectures at
+       Black Star, working with government, banking and oil &amp; gas clients
+       in Iraq.</p>
+
+    <p>
+      Most of my projects combine robotics and computer vision,
+      and the applications range from the human body to industrial environments.
+      I am interested in creating solutions that can perceive, adapt,
+      and interact with complex physical environments as it is challenging and requires unconventional approaches. And i believe technological advancement can be achieved
+      by applying creative practices such as textiles, painting,
+      and material exploration, as it can help us think about forms. fabrication,
+      and embodiment in new ways.</p>
+    <p>
+      <a href="mailto:ayaaqeelfareeq@gmail.com">Email</a>,
+      <a href="https://www.linkedin.com/in/aya-aqeel-fareeq-a04833280" target="_blank" rel="noopener">LinkedIn</a>,
+      <a href="https://github.com/ayafareeq" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</div>
+
+<div class="sheet" id="archive">
+  <h1>Projects</h1>
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner"><ul class="arch" id="arch-list"></ul></div>
+</div>
+
+
+<div class="sheet project" id="p-unet">
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <h1>Medical Image Segmentation with U-Net</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year:</dt><dd>2025</dd>
+        <dt>Category:</dt><dd>Computer Vision, Biomedical, Machine Learning</dd>
+        <div class="gap"></div>
+        <dt>Type:</dt><dd>Independent Project</dd>
+        <dt>Tools:</dt><dd>PyTorch, segmentation-models-<br/>pytorch, Albumentations,<br/>OpenCV, scikit-learn</dd>
+      </dl>
+
+      <div class="prose">
+        <p>A deep learning pipeline for the detection and outlining of the gastrointestinal
+        polyps in colonoscopy images at the pixel level. Given an endoscopic image, the model
+        produced a segmentation mask marking the exact location and shape of the polyp. This is the
+        core capability behind computer-aided detection tools that assist clinicians during
+        screening.</p>
+
+        <p>The project implemented the U-Net architecture (Ronneberger et al., 2015) and
+        delivered a reproducible pipeline from raw data to a trained model and quantitative
+        evaluation, built to train and evaluate
+        on the Kvasir-SEG benchmark of 1,000 expert-annotated images.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>Full end-to-end pipeline was built — download, augmentation, training,
+              evaluation, visualisation and single-image inference as clean, testable modules.</li>
+          <li>There were two model variants behind one config flag — U-Net from scratch, and a
+              transfer-learning version with an ImageNet-pretrained ResNet/EfficientNet encoder.</li>
+          <li>Class-imbalance-aware training was implemented — combined BCE + Dice loss, with a
+              Tversky loss also implemented for future use.</li>
+          <li>Honest evaluation is built in — Dice, IoU, precision and recall as mean ± std, exact
+              empty-mask semantics, per-image score distributions and best/median/worst panels.</li>
+          <li>Reproducible by design — fixed seeds, deterministic training, persisted splits
+              and per-experiment output directories.</li>
+          <li>Mixed-precision training was applied, early stopping, best-checkpoint selection, unit tests,
+              an overfit-a-batch sanity check.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <p>Evaluated on the held-out Kvasir-SEG test split of 150 images.</p>
+
+        <table class="results">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">Dice&nbsp;↑</th>
+              <th scope="col">IoU&nbsp;↑</th>
+              <th scope="col">Precision&nbsp;↑</th>
+              <th scope="col">Recall&nbsp;↑</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">U-Net (from scratch)</th>
+              <td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td>
+            </tr>
+            <tr>
+              <th scope="row">U-Net (ResNet34, ImageNet)</th>
+              <td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:13px;">Held-out Kvasir-SEG test split (150 images). higher is better.</p>
+
+        <p>For reference,
+        published U-Net-family results on Kvasir-SEG typically fall around 0.80-0.90 Dice and
+        0.70-0.82 IoU, with pretrained-encoder variants at the upper end.</p>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>2D, single-class scope — individual frames, one lesion type, no temporal or
+              volumetric context.</li>
+          <li>Single-dataset validation — cross-centre generalisation was not established.</li>
+          <li>No uncertainty quantification — The point-estimate probabilities were set at a fixed threshold.</li>
+          <li>Canonical U-Net was used rather than newer variants (Attention U-Net, U-Net++, TransUNet, nnU-Net).</li>
+        </ul>
+
+        <p><a href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-unet">
+      <figure><img alt="Medical Image Segmentation with U-Net" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-eeg">
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <h1>Decoding Imagined Movement from EEG</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year:</dt><dd>2025</dd>
+        <dt>Category:</dt><dd>Neural interfaces, biomedical,<br/>machine learning</dd>
+        <div class="gap"></div>
+        <dt>Type:</dt><dd>Independent Project</dd>
+        <dt>Dataset:</dt><dd>BCI Competition IV-2a</dd>
+      </dl>
+
+      <div class="prose">
+        <p>This project was a controlled, reproducible benchmark of seven decoding algorithms for motor-imagery
+          brain-computer interfaces (BCIs), evaluated on the BCI Competition IV Dataset 2a
+          (9 subjects, 22-channel EEG, four-class imagined movement: left hand, right hand, feet, tongue).
+          The methodology followed the standard MI-BCI pipeline: EEG was band-pass filtered to the mu/beta sensorimotor
+          range (8-30 Hz), epoched into a 0.5-2.5 s post-cue window, and classified using one of three algorithmic
+          families — classical spatial filtering (CSP, FBCSP), Riemannian geometry (tangent-space projection and
+          minimum-distance-to-mean on covariance matrices), and deep/generic time-series learning
+          (EEGNet, ShallowConvNet, MiniRocket, InceptionTime).</p>
+        <p>All seven decoders were evaluated on identical
+          folds through a single scikit-learn-compatible harness, under three regimes of increasing difficulty —
+          within-subject cross-session, within-subject k-fold, and cross-subject leave-one-subject-out (LOSO) —
+          with strict leakage control (all feature learning fit inside the training split only) and paired Wilcoxon
+          significance testing.</p>
+        <p>Rather than propose a new algorithm, the project delivered a fair, statistically grounded comparison
+          addressing a known reproducibility gap in the BCI literature, where methods are typically reported
+          on inconsistent splits and preprocessing.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>Seven decoders, three methodological families, benchmarked on one identical, leakage-controlled evaluation harness.</li>
+          <li>Statistically validated findings — paired Wilcoxon signed-rank tests, not just raw accuracy differences, backed every comparative claim.</li>
+          <li>Three evaluation regimes, each answering a different practical question: how well a decoder worked for one calibrated user,
+            whether it generalized to a new session, and whether it generalized to a new person entirely.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <ul>
+          <li>Within-subject accuracy: Riemannian tangent-space classification
+            was the strongest decoder (67.1% accuracy, κ = 0.56), significantly
+            outperforming CSP+LDA and the deep models (p ≈ 0.008). The classical
+            ordering — Riemannian ≥ FBCSP > CSP — matched published benchmarks
+            on this dataset.</li>
+          <li>Domain-specific features mattered: generic time-series classifiers
+            applied to raw EEG windows underperformed substantially (MiniRocket: 46.4%),
+            indicating that EEG-specific spatial/covariance representations carried
+            information that generic convolutional kernels did not capture as efficiently.</li>
+          <li>Cross-subject generalization collapsed and the ranking inverted:
+            under leave-one-subject-out testing, accuracy dropped 18–26 percentage
+            points across models, and the simplest method — plain CSP+LDA — generalized best
+            (43.2%), while the richer Riemannian and filter-bank models overfit subject-specific
+            covariance structure. The model that won on a single calibrated user was not the
+            model suited for deployment to a new one.</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>Deep-model results were compute-conditioned. EEGNet, ShallowConvNet, and InceptionTime were trained on CPU well below their reference epoch budgets,
+            so their reported scores were a floor, not a ceiling, and the "classical beats deep" finding held only under this constraint.</li>
+          <li>Incomplete cross-subject matrix. LOSO was completed for 4 of 7 models; deep-model LOSO was GPU-scale and was not run.</li>
+          <li>Transfer learning was implemented and unit-tested but not benchmarked on real data.</li>
+          <li>Single dataset, small sample (n = 9) — limited statistical power, and six pairwise tests were reported without multiple-comparison correction.</li>
+          <li>No hyperparameter optimization — all models used reference/default settings, with no nested cross-validation for tuning.</li>
+          <li>Fixed spectral and temporal parameters (one frequency band, one time window) applied uniformly across subjects, despite per-subject
+            tuning being a known lever on this dataset.</li>
+          <li>Minimal artifact handling — band-pass filtering only, no ICA or EOG regression.</li>
+          <li>No cross-hardware portability. A model trained on this 22-electrode montage could not decode recordings
+            from a different EEG device; porting to new hardware would require new labelled data and retraining.</li>
+          <li>No domain adaptation implemented — the cross-subject gap was measured and characterized, but not
+            addressed with the standard remedies (e.g., Riemannian alignment).</li>
+        </ul>
+
+        <p><a href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-eeg">
+      <figure><img alt="Decoding Imagined Movement from EEG" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-vision">
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <h1>Real-Time Assistive Vision from a Monocular Camera</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year:</dt><dd>2026</dd>
+        <dt>Category:</dt><dd>Computer Vision, Assistive Technology</dd>
+        <div class="gap"></div>
+        <dt>Type:</dt><dd>Independent Project</dd>
+        <dt>Tools:</dt><dd>YOLOv8, OpenCV, Python</dd>
+      </dl>
+
+      <div class="prose">
+        <p>This project was the foundation of a real-time assistive vision aid system.
+          Video stream from a computer's built-in camera was used to detect humans and some static indoor obstacles
+          such as furniture and doors, distance of objects was estimated from the video stream, and a voice alert was triggered.
+          The project was built using Python with OpenCV, Ultralytics/PyTorch, and NumPy.</p>
+        <p>The pipeline ran four stages per frame:</p>
+        <p>(1) Frame was acquired via OpenCV (cv2.VideoCapture)</p>
+        <p>(2) Hybrid detection was then used, the mechanism combined a learned single-stage detector - YOLOv8-nano (Ultralytics), pre-trained on
+          MS-COCO - for humans and common obstacles, and a model-free classical
+          heuristic (Gaussian blur -&gt; Canny edges -&gt; morphological dilation -&gt; contour extraction -&gt;
+          polygonal approximation, filtered by aspect ratio and area) for doors,
+          as COCO does not cover that class.</p>
+        <p>(3) The monocular distance was estimated using the pinhole camera model under a similar-triangles
+          assumption, \(d = \frac{H_{\text{real}} \times f_{\text{px}}}{h_{\text{box}}}\), from a calibrated focal length and a known per-class object height.</p>
+        <p>(4) A voice alert was triggered using the macOS say TTS (text-to-speech) engine, which ran on a background worker
+          thread with a per-object cooldown so speech didn't block the video loop or
+          repeat unnecessarily.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>Hybrid detection - YOLOv8 was paired with a classical geometric heuristic to cover doors.</li>
+          <li>The depth was estimated in metres from a single camera, with no stereo rig or active depth sensor, lowering the system costs.</li>
+          <li>The perception and speech synthesis were run on separate threads, so they didn't interfere with each other.</li>
+          <li>Eyes-free and hands-free operation, the alerts were done via voice synthesis.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <ul>
+          <li>The real-time pipeline demonstrated live detection, bounding-box localization, distance readout, and synchronized spoken alerts successfully.</li>
+          <li>Reliable detection of people and in-vocabulary COCO obstacles (chair, couch, table, TV, refrigerator, etc.) at low frame rates on a MacBook CPU.</li>
+          <li>The pinhole estimator produced decent metric distances after calibration of the focal length against a reference object of known size and range.</li>
+          <li>Door detection was validated on tall rectangular structures via the geometric heuristic.</li>
+          <li>Audio delivery was reliable with a threaded queue and per-object cooldown eliminating announcement flooding and frame-loop stalls.</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>Qualitative results. The system was not tested against a labelled dataset or ground-truth depth, so no quantitative accuracy (mAP) or distance-error metrics were reported.</li>
+          <li>Because the door detection was heuristic, not learned, it was sensitive to lighting, viewpoint, and clutter, and it produced false positives on other tall rectangles (cabinets, windows, posters).</li>
+          <li>The distance calculations were based on assumptions; accurate results required a calibrated focal length and a fixed canonical height for each class.</li>
+          <li>The vocabulary was limited to the 80 MS-COCO classes.</li>
+          <li>With no stereo baseline or motion parallax, depth was measured purely from apparent size, which could be inaccurate.</li>
+          <li>There was no temporal tracking; detection was per-frame only.</li>
+          <li>The system performed poorly in low light, motion blur, and crowded scenes.</li>
+          <li>The detections were announced independently and not ranked by proximity or risk.</li>
+        </ul>
+
+        <p><a href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-vision">
+      <figure><img alt="Real-Time Assistive Vision from a Monocular Camera" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-emg">
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <h1>Myoelectric Control from EMG</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year:</dt><dd>2025</dd>
+        <dt>Category:</dt><dd>Biomedical, machine learning,<br/>control</dd>
+        <div class="gap"></div>
+        <dt>Type:</dt><dd>Independent Project</dd>
+        <dt>Tools:</dt><dd>scikit-learn, MiniRocket,<br/>NumPy, SciPy</dd>
+      </dl>
+
+      <div class="prose">
+        <p>The project implemented a myoelectric pattern-recognition pipeline, decoding movement intent for upper-limb
+          prostheses from short windows of multichannel surface EMG (sEMG). It inferred the intended hand or wrist gesture
+          and converted the prediction into stable actuator commands.</p>
+        <p>Formally, it learned a
+          mapping $\phi: \mathbb{R}^{L \times C} \to {1,\dots,G}$ from an $L$-sample, $C$-channel window to one of $G$ gestures, followed
+          by a control policy $\pi$ that temporally regularized the predictions before they drove a device.
+          The pipeline: zero-phase Butterworth band-pass (20–450 Hz) and IIR notch conditioning -&gt;  overlapping sliding windows
+          (200 ms / 50 ms stride) -&gt; Hudgins time-domain features (MAV, RMS, WL, ZC, SSC) per channel -&gt;  classification, benchmarking
+          Linear Discriminant Analysis against SVM, Random Forest, and MiniRocket (convolutional kernels on raw windows) -&gt;
+          confidence-based rejection and causal majority-vote smoothing.</p>
+        <p>It was built in Python (NumPy, SciPy, scikit-learn, aeon,
+          pandas, Matplotlib) and ran end-to-end on a synthetic generator with no data download.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>End-to-end and reproducible: raw signal to smoothed control decisions, it is runnable offline on synthetic data and switchable to real Ninapro data via one config change.</li>
+          <li>Two modeling paradigms side by side: feature-engineered classical models vs. feature-free convolutional time-series classification (MiniRocket).</li>
+          <li>Leakage-safe evaluation: splits enforced at the repetition or subject level, never by random window, random splits let overlapping windows leak information across train and test. leave-one-subject-out gave the reliable generalization estimate.</li>
+          <li>Automated benchmarking: swept models x split regimes and emitted a metrics table, per-condition confusion matrices, and an accuracy chart.</li>
+          <li>A control layer: modeled the decision-stabilization step that separated prosthesis control from generic classification.</li>
+          <li>Tested: unit tests validated the feature mathematics against hand-computed values.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <p>On the synthetic benchmark (6 gestures, 12 channels, 4 subjects), reported as raw / policy-smoothed accuracy:</p>
+
+        <table class="results">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">Within-subject<br/>(repetition split)</th>
+              <th scope="col">Cross-subject<br/>(leave-one-out)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">LDA</th>          <td>0.94 / 0.88</td><td>0.44 / 0.42</td></tr>
+            <tr><th scope="row">SVM</th>          <td>1.00 / 0.93</td><td>0.35 / 0.33</td></tr>
+            <tr><th scope="row">Random Forest</th><td>1.00 / 0.93</td><td>0.30 / 0.29</td></tr>
+            <tr><th scope="row">MiniRocket</th>   <td>1.00 / 0.93</td><td>0.33 / 0.32</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:13px;">Raw / policy-smoothed accuracy.</p>
+
+        <p>Two findings: (1) Within-subject, all models saturated — which was expected, since the synthetic classes differed mainly in per-channel amplitude.</p>
+        <p>(2) Cross-subject, the accuracy collapsed, and the simple LDA generalized at least as well as the heavier nonlinear models — model complexity did not overcome subject/domain shift.</p>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>No validated human data. Results were on a synthetic generator with near-linearly-separable classes,
+            the approximate 0.94 within-subject score demonstrated code correctness, not clinical accuracy. Real sEMG confounds — cross-talk, non-stationarity, fatigue — were absent.</li>
+          <li>Offline framing. Zero-phase filtering was non-causal and unusable in real time, the code reported
+            classification accuracy but not end-to-end controller latency, and ran no streaming loop, so the &lt; 300 ms
+            usability constraint was stated but unverified.</li>
+          <li>Accuracy did not equal usability. Evaluation covered only windowed classification metrics, omitting control-oriented
+            measures (target-acquisition completion rate, throughput, Fitts'-law path efficiency). No proportional-control regression path was implemented.</li>
+          <li>No domain adaptation. The cross-subject collapse exposed the core open problem, but there was no recalibration
+            or transfer-learning mechanism to counter electrode shift and session-to-session drift.</li>
+          <li>Feature/model scope. Only time-domain features were wired in (no frequency-domain, AR, or wavelet features),
+            and no deep architectures beyond ROCKET, MiniRocket yielded only pseudo-probabilities, weakening confidence-based rejection there.</li>
+          <li>Amputee validation was absent. Nothing was run on Ninapro DB3/DB7; intact-subject and amputee EMG differ materially.</li>
+        </ul>
+
+        <p><a href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-emg">
+      <figure><img alt="Myoelectric Control from EMG" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-pipe">
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <h1>Soft Robotics for Pipe Inspection</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year:</dt><dd>2024 - 2025</dd>
+        <dt>Category:</dt><dd>Soft robotics, sensing, control</dd>
+        <div class="gap"></div>
+        <dt>Type:</dt><dd>MECH3895 Individual Project</dd>
+        <dt>Tools:</dt><dd>SolidWorks, MATLAB,<br/>KiCad, Arduino,<br/> silicone casting, 3D printing</dd>
+      </dl>
+
+      <div class="prose">
+        <p>This project aimed at investigating the validity of using low-cost, commercially available conductive
+        textile as reliable sensors for proprioceptive feedback in soft robotics, the investigation was done on a bio-inspired
+        inchworm robot for pipeline inspection. Soft robots are best suited for confined, irregular
+        tubular environments where rigid inspection tools fail, but they lack effective
+        internal sensing because stiff sensors compromise their compliance.</p>
+
+        <p>The project combined experimental sensor characterisation, numerical analysis of the silicone hyperelasticity, mechanical design and
+        fabrication, and embedded control to build and test a three-chamber pneumatically
+        actuated inchworm robot with an onboard endoscope.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>Electromechanical characterisation of three silver-coated knitted fabrics
+              across strain axis, sensor length and width, and signal filtering was done successfully.</li>
+          <li>Custom signal conditioning - constant-current sources and Sallen-Key active
+              low-pass filters, scaled to an eight-sensor array circuits were built.</li>
+          <li>Mooney-Rivlin hyperelastic modelling of the silicone actuators was implemented
+              and validated in MATLAB.</li>
+          <li>Discrete-time PID controller was simulated in MATLAB, deployed on an Arduino
+              Mega alongside bang-bang logic and tested on a balloon.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <ul>
+          <li>ElectroLycra proved the most repeatable fabric, tolerant of strain beyond its
+              rated limit due to a uniform loop structure.</li>
+          <li>Course-direction strain gave the most usable sensing range across all
+              three fabrics.</li>
+          <li>The PID controller converged with a stable, damped response
+              (K<sub>p</sub>=2, K<sub>d</sub>=0.6, K<sub>i</sub>=1) and ran correctly on hardware.</li>
+          <li>Structure, actuators and three-phase locomotion logic were all designed,
+              fabricated and coded.</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>The fabric resistance was very low causing near-short conditions that overloaded the
+              conditioning circuits when embedded.</li>
+          <li>The use of incompatible adhesive damaged the conductive paths, and mould inaccuracies caused
+              persistent air leaks.</li>
+          <li>There was no full-system demonstration due to insufficient actuator inflation. The closed-loop
+              control was validated on a balloon instead.</li>
+          <li>The endoscope feed was viewed raw, with no image processing due to the project's time limitations.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-pipe">
+      <figure><img alt="Soft Robotics for Pipe Inspection" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-arch">
+  <button class="close" data-close type="button" aria-label="Close">✕</button>
+  <div class="inner">
+    <h1>Professional Work</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year:</dt><dd>2026 — present</dd>
+        <dt>Category:</dt><dd>Solution Architecture</dd>
+        <div class="gap"></div>
+        <dt>Type:</dt><dd>Professional</dd>
+        <dt>Role:</dt><dd>Solutions Engineer</dd>
+      </dl>
+
+      <div class="prose">
+        <p>Solution architectures developed and technically presented to clients in a Pre-Sales Engineering role.
+          Details are limited due to client confidentiality requirements:</p>
+        <ul>
+          <li>Seismic Data Backup &amp; Archival Solution - Automated backup and long-term archival of large-scale seismic data.</li>
+          <li>Smart Border Security &amp; Detection System - Intelligent security, monitoring, and detection architecture.</li>
+          <li>Centralized Data Management &amp; Data Center Solution - Centralized infrastructure and data management architecture.</li>
+          <li>Digital Examination Platform - Secure, scalable architecture for large-scale digital examinations.</li>
+          <li>Smart Asset Management &amp; Alerting System - Data center assets monitoring, management, and mobile alerting solution.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-arch">
+      <figure><img alt="Professional Work" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="mobile">
+  <h1>Aya Aqeel Fareeq</h1>
+  <ul id="mobile-list"></ul>
+</div>
+
+<script>
+(function(){
+  const pts = Array.from(document.querySelectorAll('.pt'));
+
+  function closeAll(){
+    document.querySelectorAll('.sheet.open').forEach(s => s.classList.remove('open'));
+  }
+  function openSheet(id){
+    const sheet = id && document.getElementById(id);
+    if (!sheet) return;
+    closeAll();
+    sheet.classList.add('open');
+    sheet.scrollTop = 0;
+  }
+
+  pts.forEach(p => {
+    p.style.left = p.dataset.x + '%';
+    p.style.top  = p.dataset.y + '%';
+    if (+p.dataset.x > 55) p.classList.add('flip');
+    if (+p.dataset.y > 55) p.classList.add('up');
+    const title = p.querySelector('.name').textContent;
+    p.setAttribute('aria-label', title);
+
+    /* hover shows an image — set data-preview="path/to/image.jpg" on the dot */
+    const src = p.dataset.preview;
+    if (src){
+      const img = document.createElement('img');
+      img.className = 'preview';
+      img.alt = '';
+      img.addEventListener('error', () => img.remove());
+      img.src = src;
+      p.appendChild(img);
+    }
+
+    p.addEventListener('click', () => openSheet(p.dataset.sheet));
+  });
+
+  const arch   = document.getElementById('arch-list');
+  const mobile = document.getElementById('mobile-list');
+  pts.forEach(p => {
+    const title = p.querySelector('.name').innerHTML;
+    const row = '<a href="#" data-sheet="' + p.dataset.sheet + '">' + title +
+                '</a> <span class="cat">' + p.dataset.cat + '</span>';
+    const a = document.createElement('li'); a.innerHTML = row; arch.appendChild(a);
+    const b = document.createElement('li'); b.innerHTML = row; mobile.appendChild(b);
+  });
+  [arch, mobile].forEach(listEl => {
+    listEl.addEventListener('click', e => {
+      const a = e.target.closest('a[data-sheet]');
+      if (!a) return;
+      e.preventDefault();
+      openSheet(a.dataset.sheet);
+    });
+  });
+
+  document.getElementById('open-info').addEventListener('click', e => { e.preventDefault(); openSheet('info'); });
+  document.getElementById('open-archive').addEventListener('click', e => { e.preventDefault(); openSheet('archive'); });
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeAll));
+
+  const PROJECT_IMAGES = {
+    'p-unet':   ['ayafareeq.github.io/Results Collage-selection-crop.png'],
+    'p-eeg':    ['ayafareeq.github.io/EEG Collage-selection.png'],
+    'p-vision': [],
+    'p-emg':    ['ayafareeq.github.io/EMG Process Board-selection.png'],
+    'p-pipe':   ['ayafareeq.github.io/Pipeline Robot Board v5-selection.png'],
+    'p-arch':   []
+  };
+
+  document.querySelectorAll('.gallery[data-gallery]').forEach(gal => {
+    const id    = gal.dataset.gallery;
+    const shot  = gal.querySelector('img');
+    const count = gal.querySelector('.count');
+    let list = (PROJECT_IMAGES[id] || []).slice();
+    let idx  = 0;
+
+    function hide(){ gal.style.display = 'none'; }
+    function render(n){
+      if (!list.length) return hide();
+      gal.style.display = '';
+      idx = (n + list.length) % list.length;
+      shot.src = list[idx];
+      count.textContent = list.length > 1 ? (idx + 1) + ' / ' + list.length : '';
+    }
+    shot.addEventListener('error', () => {
+      list.splice(idx, 1);
+      if (!list.length) hide(); else render(idx);
+    });
+    shot.addEventListener('click', () => render(idx + 1));
+    gal._nav = dir => render(idx + dir);
+    render(0);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeAll(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+      const gal = document.querySelector('.sheet.project.open .gallery[data-gallery]');
+      if (gal && gal._nav) gal._nav(e.key === 'ArrowRight' ? 1 : -1);
+    }
+  });
+})();
+</script>
+</body>
+</html>

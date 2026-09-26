@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aya Aqeel Fareeq</title>
+<meta name="description" content="Aya Aqeel Fareeq — mechatronics and robotics engineer, solutions architect. Projects plotted between software and hardware, the human body and the field." />
+<meta name="color-scheme" content="light" />
+<meta property="og:title" content="Aya Aqeel Fareeq" />
+<meta property="og:description" content="Mechatronics and robotics engineer. Perception, control and soft robotics — from the human body to industrial environments." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='6' fill='%23111'/%3E%3C/svg%3E" />
+
+<style>
+  :root{
+    --ink:#111111;
+    --ink-60:#6E6E6E;
+    --ink-40:#767676;
+    --rule:#DEDEDE;
+    --rule-soft:#EDEDED;
+    --paper:#FFFFFF;
+
+    --sans: Helvetica Neue, Helvetica, Arial, sans-serif;
+
+    --pad: 22px;
+    --inset: 54px;          
+
+    --t-micro: 11px;        
+    --t-small: 13px;
+    --t-base: 15px;
+    --t-lead: 19px;
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --ease-curtain: cubic-bezier(.76,0,.24,1);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--t-base);line-height:1.3;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow:hidden;
+  }
+  body.locked{overflow:hidden;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--ink);color:var(--paper);}
+
+  .intro{
+    position:fixed;inset:0;z-index:100;
+    background:var(--paper);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--rule);
+    will-change:transform;
+  }
+  .intro[hidden]{display:none;}
+  .greet{
+    display:flex;align-items:center;gap:13px;
+    font-size:var(--t-lead);font-weight:400;letter-spacing:-.02em;
+    line-height:1;color:var(--ink);
+  }
+  .greet .bead{
+    width:9px;height:9px;border-radius:50%;background:var(--ink);
+    flex:none;
+  }
+  .greet .word{display:block;}
+  .intro.out{
+    transform:translateY(-100%);
+    transition:transform .72s var(--ease-curtain);
+  }
+  .intro-skip{
+    position:absolute;bottom:var(--pad);right:var(--pad);
+    background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--sans);font-size:var(--t-micro);letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-40);
+  }
+  .intro-skip:hover{color:var(--ink);}
+
+  .stage{opacity:0;}
+  .stage.in{opacity:1;transition:opacity .5s var(--ease) .06s;}
+
+
+
+  .frame{position:fixed;inset:0;}
+
+  .rule-h{position:absolute;left:var(--inset);right:var(--inset);top:50%;height:1px;background:var(--rule);}
+  .rule-v{position:absolute;top:var(--inset);bottom:var(--inset);left:50%;width:1px;background:var(--rule);}
+
+  .tick{position:absolute;background:var(--rule);}
+  .tick.h{width:1px;height:7px;top:calc(50% - 3px);}
+  .tick.v{height:1px;width:7px;left:calc(50% - 3px);}
+
+  .lbl{position:absolute;white-space:nowrap;}
+  .axis{
+    font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-60);
+  }
+  .tl{top:var(--pad);left:var(--pad);}
+  .tr{top:var(--pad);right:var(--pad);}
+  .br{bottom:var(--pad);right:var(--pad);}
+  .tc{top:var(--pad);left:50%;transform:translateX(-50%);}
+  .bc{bottom:var(--pad);left:50%;transform:translateX(-50%);}
+  .ml{left:var(--pad);top:50%;transform:translate(-50%,-50%) rotate(-90deg);}
+  .mr{right:var(--pad);top:50%;transform:translate(50%,-50%) rotate(90deg);}
+
+  .name-mark{font-size:var(--t-base);letter-spacing:-.01em;}
+
+  .nav{
+    font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;
+    padding:2px 0;border-bottom:1px solid transparent;
+    transition:border-color .18s var(--ease),color .18s var(--ease);
+  }
+  .nav:hover,.nav:focus-visible{border-bottom-color:var(--ink);outline:none;}
+
+  .key{
+    position:absolute;left:var(--pad);bottom:var(--pad);
+    font-size:var(--t-small);line-height:1.5;color:var(--ink-60);
+  }
+  .key b{display:block;font-weight:400;color:var(--ink);
+    font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:7px;}
+
+  .pt{
+    position:absolute;transform:translate(-50%,-50%);
+    display:block;width:11px;height:11px;border-radius:50%;
+    background:var(--ink);border:0;padding:0;cursor:pointer;
+    transition:transform .2s var(--ease);
+  }
+  .pt::after{                       
+    content:"";position:absolute;inset:-14px;border-radius:50%;
+  }
+  .pt:hover,.pt:focus-visible{transform:translate(-50%,-50%) scale(1.35);}
+  .pt:focus-visible{outline:1px solid var(--ink);outline-offset:8px;}
+
+  .pt .name{
+    position:absolute;top:50%;left:22px;transform:translateY(-50%);
+    font-size:14px;letter-spacing:-.01em;color:var(--ink-60);
+    white-space:nowrap;pointer-events:none;
+    transition:color .18s var(--ease);
+  }
+  .pt.flip .name{left:auto;right:22px;}
+  .pt:hover .name,.pt:focus-visible .name{color:var(--ink);}
+
+  .pt .preview{
+    display:block;position:absolute;top:26px;left:0;
+    width:230px;max-width:56vw;height:auto;
+    border:1px solid var(--rule);background:var(--paper);
+    opacity:0;visibility:hidden;transform:translateY(4px);
+    transition:opacity .18s var(--ease),transform .18s var(--ease);
+    pointer-events:none;z-index:5;
+  }
+  .pt.flip .preview{left:auto;right:0;}
+  .pt.up .preview{top:auto;bottom:26px;transform:translateY(-4px);}
+  .pt:hover .preview,.pt:focus-visible .preview{opacity:1;visibility:visible;transform:translateY(0);}
+
+  .readout{
+    position:absolute;right:var(--pad);bottom:calc(var(--pad) + 22px);
+    text-align:right;font-size:var(--t-micro);letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-40);
+    opacity:0;transition:opacity .18s var(--ease);
+    pointer-events:none;
+  }
+  .readout.on{opacity:1;}
+
+  .sheet{
+    position:fixed;inset:0;background:var(--paper);z-index:30;padding:var(--pad);
+    display:none;overflow:auto;overscroll-behavior:contain;
+  }
+  .sheet.open{display:block;animation:rise .24s var(--ease);}
+  @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  .sheet .close{
+    position:fixed;top:var(--pad);right:var(--pad);z-index:31;
+    background:none;border:0;padding:2px 0;cursor:pointer;
+    font-family:var(--sans);font-size:var(--t-micro);letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink);
+    border-bottom:1px solid transparent;transition:border-color .18s var(--ease);
+  }
+  .sheet .close:hover,.sheet .close:focus-visible{border-bottom-color:var(--ink);outline:none;}
+
+  .sheet h1{
+    font-size:var(--t-lead);font-weight:400;letter-spacing:-.02em;margin:0;
+  }
+  .sheet .inner{max-width:620px;margin:120px auto 90px;}
+  .sheet .inner > h1{margin-bottom:28px;}
+  .sheet .inner p{font-size:var(--t-base);line-height:1.6;margin:0 0 18px;color:var(--ink);}
+  .sheet .inner a.link{
+    border-bottom:1px solid var(--rule);
+    transition:border-color .18s var(--ease);
+  }
+  .sheet .inner a.link:hover{border-bottom-color:var(--ink);}
+
+  .eyebrow{
+    font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-40);margin:0 0 12px;
+  }
+
+  .arch{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-soft);}
+  .arch li{border-bottom:1px solid var(--rule-soft);}
+  .arch a{
+    display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+    padding:14px 0;transition:opacity .18s var(--ease);
+  }
+  .arch a:hover{opacity:.5;}
+  .arch .cat{
+    font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-40);white-space:nowrap;
+  }
+
+  .sheet.project .inner{max-width:1020px;margin:120px auto 90px;}
+  .sheet.project h1{margin-bottom:38px;max-width:20ch;}
+  .sheet.project .cols{
+    display:grid;grid-template-columns:230px minmax(0,640px);
+    gap:0 70px;align-items:start;
+  }
+
+  .meta{
+    display:grid;grid-template-columns:auto 1fr;gap:0 16px;
+    align-content:start;grid-auto-rows:min-content;
+    font-size:var(--t-small);line-height:1.6;
+    position:sticky;top:120px;
+  }
+  .meta dt{margin:0;color:var(--ink-40);
+    font-size:var(--t-micro);letter-spacing:.12em;text-transform:uppercase;
+    padding-top:2px;}
+  .meta dd{margin:0;}
+  .meta .gap{grid-column:1 / -1;height:16px;}
+
+  .prose{font-size:var(--t-base);line-height:1.65;}
+  .sheet.project .inner .prose p{font-size:var(--t-base);line-height:1.65;margin:0 0 16px;}
+  .prose h2{
+    font-size:var(--t-micro);font-weight:400;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-40);margin:34px 0 12px;
+    padding-top:14px;border-top:1px solid var(--rule-soft);
+  }
+  .prose ul{margin:0 0 16px;padding-left:18px;}
+  .prose li{margin-bottom:8px;}
+  .prose a.link{border-bottom:1px solid var(--rule);}
+  .prose a.link:hover{border-bottom-color:var(--ink);}
+  .note{font-size:var(--t-small);color:var(--ink-40);}
+
+  table.results{
+    border-collapse:collapse;width:100%;font-size:var(--t-small);margin:6px 0 14px;
+  }
+  table.results th,
+  table.results td{border-bottom:1px solid var(--rule-soft);padding:9px 12px 9px 0;text-align:left;font-weight:400;}
+  table.results thead th{
+    font-size:12px;letter-spacing:.01em;
+    color:var(--ink-40);vertical-align:bottom;line-height:1.4;
+  }
+  table.results th:not(:first-child),
+  table.results td:not(:first-child){
+    text-align:right;font-variant-numeric:tabular-nums;padding-right:0;padding-left:18px;
+  }
+  table.results tbody tr:last-child td,
+  table.results tbody tr:last-child th{border-bottom:none;}
+  table.results td.tbd{color:var(--ink-40);}
+
+  .gallery{margin:56px auto 0;max-width:1020px;}
+  .gallery figure{margin:0;}
+  .gallery img{max-width:100%;max-height:72vh;display:block;margin:0 auto;cursor:pointer;}
+  .count{
+    margin-top:14px;text-align:center;
+    font-size:var(--t-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);
+  }
+
+  @media(max-width:980px){
+    .sheet.project .cols{grid-template-columns:1fr;gap:30px;}
+    .meta{position:static;}
+  }
+
+  .mobile{display:none;padding:var(--pad);}
+  .mobile header{margin:40px 0 44px;}
+  .mobile h1{font-size:var(--t-lead);font-weight:400;letter-spacing:-.02em;margin:0 0 14px;}
+  .mobile header p{margin:0;font-size:var(--t-small);color:var(--ink-60);line-height:1.5;}
+  .mobile .axes{
+    font-size:var(--t-small);letter-spacing:.01em;
+    color:var(--ink-40);margin:0 0 18px;
+  }
+  .mobile .foot{
+    margin:36px 0 0;font-size:var(--t-micro);letter-spacing:.16em;text-transform:uppercase;
+  }
+  .mobile .foot a{border-bottom:1px solid var(--rule);margin-right:16px;display:inline-block;}
+
+  @media(max-width:860px), (max-height:520px){
+    body{overflow:auto;}
+    .frame{display:none;}
+    .mobile{display:block;}
+    .sheet .inner,.sheet.project .inner{margin-top:84px;}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms !important;animation-iteration-count:1 !important;
+      transition-duration:.01ms !important;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" role="presentation" aria-hidden="true">
+  <p class="greet"><span class="bead"></span><span class="word" id="greet-word">Hello</span></p>
+  <button class="intro-skip" type="button" id="intro-skip">Skip</button>
+</div>
+
+<div class="stage" id="stage">
+
+<div class="frame">
+
+  <div class="rule-h"></div>
+  <div class="rule-v"></div>
+
+  <div class="tick h" style="left:25%"></div>
+  <div class="tick h" style="left:75%"></div>
+  <div class="tick v" style="top:25%"></div>
+  <div class="tick v" style="top:75%"></div>
+
+  <span class="lbl tl name-mark">Aya Aqeel Fareeq</span>
+  <a class="lbl tr nav" href="#info" id="open-info">Info</a>
+  <a class="lbl br nav" href="#projects" id="open-archive">Index</a>
+
+  <span class="lbl tc axis">Software</span>
+  <span class="lbl bc axis">Hardware</span>
+  <span class="lbl ml axis">Human Body</span>
+  <span class="lbl mr axis">Field</span>
+
+  <div class="key">
+    <b>Interests</b>
+    Soft Robotics<br/>
+    Computer Vision<br/>
+    Neural Interfaces<br/>
+    Assistive Systems<br/>
+    Control Systems<br/>
+    Solution Architectures
+  </div>
+
+  <div class="readout" id="readout" aria-hidden="true"></div>
+
+  <button class="pt" type="button" data-x="12" data-y="14"
+          data-sheet="p-unet"
+          data-preview="Results Collage-selection-crop.png"
+          data-cat="Computer Vision">
+    <span class="name">Medical Image Segmentation with U-Net</span>
+  </button>
+
+  <button class="pt" type="button" data-x="21" data-y="27"
+          data-sheet="p-eeg"
+          data-preview="EEG Collage-selection.png"
+          data-cat="Neural Interfaces">
+    <span class="name">Decoding Imagined Movement from EEG</span>
+  </button>
+
+  <button class="pt" type="button" data-x="41" data-y="35"
+          data-sheet="p-vision"
+          data-cat="Assistive Systems">
+    <span class="name">Real-Time Assistive Vision</span>
+  </button>
+
+  <button class="pt" type="button" data-x="27" data-y="57"
+          data-sheet="p-emg"
+          data-preview="EMG Process Board-selection.png"
+          data-cat="Control Systems">
+    <span class="name">Myoelectric Control from EMG</span>
+  </button>
+
+  <button class="pt" type="button" data-x="88" data-y="45"
+          data-sheet="p-arch"
+          data-cat="Solution Architectures">
+    <span class="name">Architectures for Enterprise Clients</span>
+  </button>
+
+  <button class="pt" type="button" data-x="80" data-y="86"
+          data-sheet="p-pipe"
+          data-preview="Pipeline Robot Board v5-selection.png"
+          data-cat="Soft Robotics">
+    <span class="name">Soft Robotics for Pipe Inspection</span>
+  </button>
+
+</div>
+
+<div class="mobile">
+  <header>
+    <h1>Aya Aqeel Fareeq</h1>
+    <p>Mechatronics and robotics engineer. Perception, control and soft robotics — from the human body to industrial environments.</p>
+  </header>
+  <p class="axes">Software ↔ Hardware · Human body ↔ Field</p>
+  <ul class="arch" id="mobile-list"></ul>
+  <p class="foot">
+    <a href="#info" data-sheet="info">Info</a>
+    <a href="mailto:ayaaqeelfareeq@gmail.com">Email</a>
+  </p>
+</div>
+
+</div>
+
+<div class="sheet" id="info" role="dialog" aria-modal="true" aria-labelledby="info-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Info</p>
+    <h1 id="info-h">Aya Aqeel Fareeq</h1>
+    <p>Hi, I'm Aya, a mechatronics and robotics engineer. BEng Mechatronics &amp; Robotics,
+       University of Leeds.</p>
+    <p>I'm currently working as a solution engineer working across multiple IT and engineering domains and learning everyday. I have experince working with different industries in Iraq including
+       government, banking and oil &amp; gas clients.</p>
+    <p>I have interest in projects that sit between robotics, computer vision and image processing. The
+       applications range from the human body to industrial environments. I am
+       intrigued in systems that can perceive, adapt and act inside complex physical
+       environments - the interesting part to me is the use of unconventional
+       approaches to achieve this.</p>
+    <p>I also wholeheartedly believe that creative practice belongs in engineering. Textiles, painting
+       and material manipulation can help change how we think about form, fabrication and
+       embodiment or mechatronic systems.</p>
+    <p>
+      <a class="link" href="mailto:ayaaqeelfareeq@gmail.com">Email</a> ·
+      <a class="link" href="https://www.linkedin.com/in/aya-aqeel-fareeq-a04833280" target="_blank" rel="noopener">LinkedIn</a> ·
+      <a class="link" href="https://github.com/ayafareeq" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</div>
+
+<div class="sheet" id="projects" role="dialog" aria-modal="true" aria-labelledby="idx-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Index</p>
+    <h1 id="idx-h">Projects</h1>
+    <ul class="arch" id="arch-list"></ul>
+  </div>
+</div>
+
+<div class="sheet project" id="p-unet" role="dialog" aria-modal="true" aria-labelledby="unet-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Computer Vision</p>
+    <h1 id="unet-h">Medical Image Segmentation with U-Net</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year</dt><dd>2025</dd>
+        <dt>Category</dt><dd>Computer vision, biomedical, machine learning</dd>
+        <div class="gap"></div>
+        <dt>Type</dt><dd>Independent project</dd>
+        <dt>Tools</dt><dd>PyTorch, segmentation-models-pytorch, Albumentations, OpenCV, scikit-learn</dd>
+      </dl>
+
+      <div class="prose">
+        <p>A deep learning pipeline for the detection and outlining of the gastrointestinal
+        polyps in colonoscopy images at the pixel level. Given an endoscopic image, the model
+        produced a segmentation mask marking the exact location and shape of the polyp. This is the
+        core capability behind computer-aided detection tools that assist clinicians during
+        screening.</p>
+
+        <p>The project implemented the U-Net architecture (Ronneberger et al., 2015) and
+        delivered a reproducible pipeline from raw data to a trained model and quantitative
+        evaluation, built to train and evaluate
+        on the Kvasir-SEG benchmark of 1,000 expert-annotated images.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>There were two model variants behind one config flag, the U-Net from scratch, and a
+              transfer-learning version with an ImageNet-pretrained ResNet/EfficientNet encoder.</li>
+          <li>The pipeline implements class-imbalance-aware training. With combined BCE + Dice loss and a 
+              Tversky loss also implemented for future use.</li>
+          <li>Honest evaluation was built in. Dice, IoU, precision and recall as mean ± std, exact
+              empty-mask semantics, per-image score distributions and best/median/worst panels.</li>
+          <li>This pipeline is reproducible by design. Fixed seeds, deterministic training, persisted splits
+              and per-experiment output directories.</li>
+          <li>A Mixed-precision training was applied, with early stopping, best-checkpoint selection, unit tests,
+              an overfit-a-batch sanity check.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <p>The results were evaluated using the held-out Kvasir-SEG test split of 150 images.</p>
+
+        <table class="results">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">Dice&nbsp;↑</th>
+              <th scope="col">IoU&nbsp;↑</th>
+              <th scope="col">Precision&nbsp;↑</th>
+              <th scope="col">Recall&nbsp;↑</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">U-Net (from scratch)</th>
+              <td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td>
+            </tr>
+            <tr>
+              <th scope="row">U-Net (ResNet34, ImageNet)</th>
+              <td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td><td class="tbd">–</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>For reference, published U-Net-family results on Kvasir-SEG typically fall around
+        0.80–0.90 Dice and 0.70–0.82 IoU, with pretrained-encoder variants at the upper end.</p>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>A 2D, single-class scope: This included individual frames, one lesion type and no temporal or
+              volumetric context.</li>
+          <li>Single-dataset validation: A cross-centre generalisation was not established.</li>
+          <li>No uncertainty quantification: the point-estimate probabilities were set at a fixed threshold.</li>
+          <li>Canonical U-Net: the standard U-Net architecture was used rather than newer variants (Attention U-Net, U-Net++, TransUNet, nnU-Net).</li>
+        </ul>
+
+        <p><a class="link" href="https://github.com/ayafareeq/U-Net-Polyp-Segmentation" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-unet">
+      <figure><img src="Results Collage-selection-crop.png" alt="Segmentation results — input frames, predicted masks and ground truth" loading="lazy" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-eeg" role="dialog" aria-modal="true" aria-labelledby="eeg-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Neural Interfaces</p>
+    <h1 id="eeg-h">Decoding Imagined Movement from EEG</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year</dt><dd>2025</dd>
+        <dt>Category</dt><dd>Neural interfaces, biomedical, machine learning</dd>
+        <div class="gap"></div>
+        <dt>Type</dt><dd>Independent project</dd>
+        <dt>Dataset</dt><dd>BCI Competition IV-2a</dd>
+      </dl>
+
+      <div class="prose">
+        <p>This project is a controlled, reproducible benchmark of seven decoding algorithms for motor-imagery
+          brain-computer interfaces (BCIs) and evaluated on the BCI Competition IV Dataset 2a
+          (9 subjects, 22-channel EEG, four-class imagined movement: left hand, right hand, feet, tongue).
+          The methodology followed the standard MI-BCI pipeline: EEG was band-pass filtered to the mu/beta sensorimotor
+          range (8–30 Hz), epoched into a 0.5–2.5 s post-cue window, and classified using one of three algorithmic
+          families - classical spatial filtering (CSP, FBCSP), Riemannian geometry (tangent-space projection and
+          minimum-distance-to-mean on covariance matrices), and deep/generic time-series learning
+          (EEGNet, ShallowConvNet, MiniRocket, InceptionTime).</p>
+        <p>All seven decoders were evaluated on identical
+          folds through a single scikit-learn-compatible harness and under three regimes of increasing difficulty —
+          within-subject cross-session, within-subject k-fold, and cross-subject leave-one-subject-out (LOSO) —
+          with strict leakage control (all feature learning fit inside the training split only) and paired Wilcoxon
+          significance testing.</p>
+        <p>Rather than proposing a new algorithm, the project delivered a fair, statistically grounded comparison
+          addressing a known reproducibility gap in the BCI literature, where methods are typically reported
+          on inconsistent splits and preprocessing.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>Seven decoders and three methodological families were all benchmarked on one identical, leakage-controlled evaluation harness.</li>
+          <li>Findings were statistically validated — paired Wilcoxon signed-rank tests, not just raw accuracy differences, backed every comparative claim.</li>
+          <li>Three evaluation regimes, each answering a different practical question: how well a decoder worked for one calibrated user,
+            whether it generalized to a new session, and whether it generalized to a new person entirely.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <ul>
+          <li>Within-subject accuracy: Riemannian tangent-space classification
+            was the strongest decoder (67.1% accuracy, κ = 0.56), significantly
+            outperforming CSP+LDA and the deep models (p ≈ 0.008). The classical
+            ordering — Riemannian ≥ FBCSP > CSP — matched published benchmarks
+            on this dataset.</li>
+          <li>Domain-specific features mattered: generic time-series classifiers
+            applied to raw EEG windows underperformed a lot (MiniRocket: 46.4%),
+            indicating that EEG-specific spatial/covariance representations carried
+            information that generic convolutional kernels did not capture as efficiently.</li>
+          <li>Cross-subject generalization collapsed and the ranking inverted:
+            under leave-one-subject-out testing, accuracy dropped 18–26 percentage 
+            points across models, and the simplest method — plain CSP+LDA — generalized best
+            (43.2%), while the richer Riemannian and filter-bank models overfit subject-specific
+            covariance structure. The model that won on a single calibrated user was not the
+            model suited for deployment to a new one.</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>Deep-model results were compute-conditioned: EEGNet, ShallowConvNet, and InceptionTime were all trained on CPU well below their reference epoch budgets,
+            so their reported scores were on the lower end, and the "classical beats deep" finding held only under this constraint.</li>
+          <li>Incomplete cross-subject matrix: LOSO was completed for 4 of 7 models. Deep-model LOSO was GPU-scale and was not run.</li>
+          <li>No benchmarking on real data: Transfer learning was implemented and unit-tested but not benchmarked on any real data.</li>
+          <li>Single dataset, small sample (n = 9): This is a limited statistical power, and six pairwise tests were reported without multiple-comparison correction.</li>
+          <li>No hyperparameter optimization: all models used reference/default settings, with no nested cross-validation for tuning.</li>
+          <li>Fixed spectral and temporal parameters (one frequency band, one time window): this wasapplied uniformly across subjects, despite per-subject
+            tuning being a known lever on this dataset.</li>
+          <li>Minimal artifact handling: Only band-pass filtering, no ICA or EOG regression.</li>
+          <li>No cross-hardware portability: A model trained on this 22-electrode montage wasn't able to decode recordings
+            from a different EEG device. Porting to new hardware would require new labelled data and retraining.</li>
+          <li>No domain adaptation implemented: the cross-subject gap was measured and characterized, but not
+            addressed with the standard remedies (e.g., Riemannian alignment).</li>
+        </ul>
+
+        <p><a class="link" href="https://github.com/ayafareeq" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-eeg">
+      <figure><img src="EEG Collage-selection.png" alt="EEG decoding — pipeline stages and per-subject accuracy" loading="lazy" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-vision" role="dialog" aria-modal="true" aria-labelledby="vis-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Assistive Systems</p>
+    <h1 id="vis-h">Real-Time Assistive Vision from a Monocular Camera</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year</dt><dd>2026</dd>
+        <dt>Category</dt><dd>Computer vision, assistive technology</dd>
+        <div class="gap"></div>
+        <dt>Type</dt><dd>Independent project</dd>
+        <dt>Tools</dt><dd>YOLOv8, OpenCV, Python</dd>
+      </dl>
+
+      <div class="prose">
+        <p>This project is the foundation of a more advancedreal-time assistive vision aid system.
+          Video stream from a computer's built-in camera is used to detect humans and some static indoor obstacles
+          such as furniture and doors, distance of objects is estimated from the video stream, and a voice alert was triggered.
+          The project was built using Python with OpenCV, Ultralytics/PyTorch, and NumPy.</p>
+        <p>The pipeline runs four stages per each frame:</p>
+        <p>(1) Frame is acquired via OpenCV (cv2.VideoCapture).</p>
+        <p>(2) Hybrid detection is then used, the mechanism combined a learned single-stage detector — YOLOv8-nano (Ultralytics), pre-trained on
+          MS-COCO — for humans and common obstacles, and a model-free classical
+          heuristic (Gaussian blur &rarr; Canny edges &rarr; morphological dilation &rarr; contour extraction &rarr;
+          polygonal approximation, filtered by aspect ratio and area) for doors,
+          as COCO does not cover that class.</p>
+        <p>(3) The monocular distance is then estimated using the pinhole camera model under a similar-triangles
+          assumption, \(d = \frac{H_{\text{real}} \times f_{\text{px}}}{h_{\text{box}}}\), from a calibrated focal length and a known per-class object height.</p>
+        <p>(4) A voice alert is triggered using the macOS say TTS (text-to-speech) engine, which ran on a background worker
+          thread with a per-object cooldown so speech didn't block the video loop or
+          repeat unnecessarily.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>Hybrid detection: YOLOv8 was paired with a classical geometric heuristic to cover doors.</li>
+          <li>Single-camera depth estimation: The estimation was performed in metres, with no stereo rig or active depth sensor, lowering the system costs.</li>
+          <li>Separate threads: were used to run perception and speech synthesis, so they didn't interfere with each other.</li>
+          <li>Eyes-free and hands-free operation: the alerts were done via voice synthesis.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <ul>
+          <li>The real-time pipeline demonstrated live detection, bounding-box localization, distance readout, and synchronized spoken alerts successfully.</li>
+          <li>Reliable detection of people and in-vocabulary COCO obstacles (chair, couch, table, TV, refrigerator, etc.) at low frame rates on a MacBook CPU.</li>
+          <li>The pinhole estimator produced decent metric distances after calibration of the focal length against a reference object of known size and range.</li>
+          <li>Door detection was validated on tall rectangular structures via the geometric heuristic.</li>
+          <li>Audio delivery was reliable with a threaded queue and per-object cooldown eliminating announcement flooding and frame-loop stalls.</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>Qualitative results: The system was not tested against a labelled dataset or ground-truth depth, so no quantitative accuracy (mAP) or distance-error metrics were reported.</li>
+          <li>Detection limitations: Because the door detection was heuristic, not learned, it was sensitive to lighting, viewpoint, and clutter, and it produced false positives on other tall rectangles (cabinets, windows, posters).</li>
+          <li>Distance limitations: The distance calculations were based on assumptions, accurate results required a calibrated focal length and a fixed canonical height for each class.</li>
+          <li>Limited Vocabulary: The vocabulary was limited to the 80 MS-COCO classes.</li>
+          <li>Depth estimation limitations: With no stereo baseline or motion parallax, depth was measured purely from apparent size, which could be inaccurate.</li>
+          <li>Per-frame detection: There was no temporal tracking, it was per-frame only.</li>
+          <li>Environmental limitations: The system performed poorly in low light, motion blur, and crowded scenes.</li>
+          <li>Announcement limitations: The detections were announced independently and not ranked by proximity or risk.</li>
+        </ul>
+
+        <p><a class="link" href="https://github.com/ayafareeq" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-emg" role="dialog" aria-modal="true" aria-labelledby="emg-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Control Systems</p>
+    <h1 id="emg-h">Myoelectric Control from EMG</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year</dt><dd>2025</dd>
+        <dt>Category</dt><dd>Biomedical, machine learning, control</dd>
+        <div class="gap"></div>
+        <dt>Type</dt><dd>Independent project</dd>
+        <dt>Tools</dt><dd>scikit-learn, MiniRocket, NumPy, SciPy</dd>
+      </dl>
+
+      <div class="prose">
+        <p>The project implementes a myoelectric pattern-recognition pipeline, decoding movement intent for upper-limb
+          prostheses from short windows of multichannel surface EMG (sEMG). It inferres the intended hand or wrist gesture
+          and converted the prediction into stable actuator commands.</p>
+        <p>Formally, it learns a
+          mapping $\phi: \mathbb{R}^{L \times C} \to {1,\dots,G}$ from an $L$-sample, $C$-channel window to one of $G$ gestures, followed
+          by a control policy $\pi$ that temporally regularizes the predictions before they drive a device.
+          The pipeline consists of: a zero-phase Butterworth band-pass (20–450 Hz), IIR notch conditioning &rarr; overlapping sliding windows
+          (200 ms / 50 ms stride) &rarr; Hudgins time-domain features (MAV, RMS, WL, ZC, SSC) per channel &rarr; classification, benchmarking
+          Linear Discriminant Analysis against SVM, Random Forest, and MiniRocket (convolutional kernels on raw windows) &rarr;
+          confidence-based rejection and causal majority-vote smoothing.</p>
+        <p>This is built in Python (NumPy, SciPy, scikit-learn, aeon,
+          pandas, Matplotlib) and runs end-to-end on a synthetic generator with no data download.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>End-to-end and reproducible: from a raw signal to a smoothed control decisions, runnable offline on synthetic data and switchable to real Ninapro data via one config change.</li>
+          <li>Two modeling paradigms side by side: feature-engineered classical models vs. feature-free convolutional time-series classification (MiniRocket).</li>
+          <li>Leakage-safe evaluation: the splits are enforced at the repetition or subject level, never by random window. Random splits let overlapping windows leak information across train and test. Leave-one-subject-out ressulted in a reliable generalization estimate.</li>
+          <li>Automated benchmarking: swept models x split regimes and emitted a metrics table, per-condition confusion matrices, and an accuracy chart.</li>
+          <li>A control layer: that modeled the decision-stabilization step that separated prosthesis control from generic classification.</li>
+          <li>Tested pipeline: The unit tests validated the feature mathematics against hand-computed values.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <p>On the synthetic benchmark (6 gestures, 12 channels, 4 subjects), reported as raw / policy-smoothed accuracy:</p>
+
+        <table class="results">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">Within-subject<br/>(repetition split)</th>
+              <th scope="col">Cross-subject<br/>(leave-one-out)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">LDA</th>          <td>0.94 / 0.88</td><td>0.44 / 0.42</td></tr>
+            <tr><th scope="row">SVM</th>          <td>1.00 / 0.93</td><td>0.35 / 0.33</td></tr>
+            <tr><th scope="row">Random Forest</th><td>1.00 / 0.93</td><td>0.30 / 0.29</td></tr>
+            <tr><th scope="row">MiniRocket</th>   <td>1.00 / 0.93</td><td>0.33 / 0.32</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Raw / policy-smoothed accuracy.</p>
+
+        <p>Two findings: (1) Within-subject, all the models saturated (which was expected), since the synthetic classes differed mainly in per-channel amplitude.</p>
+        <p>(2) Cross-subject, the accuracy collapsed, and the simple LDA generalized just as well as the larger nonlinear models — model complexity did not overcome subject/domain shift.</p>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>No validated human data: The results were on a synthetic generator with near-linearly-separable classes.
+            The approximate 0.94 within-subject score demonstrated that the code functioned correctly, not clinical accuracy. Real sEMG confounds — cross-talk, non-stationarity, fatigue — were absent.</li>
+          <li>Offline framing: Zero-phase filtering was non-causal and unusable in real time, the code reported
+            classification accuracy but not end-to-end controller latency, and ran no streaming loop, so the &lt; 300 ms
+            usability constraint was stated but it was unverified.</li>
+          <li>Accuracy did not equal usability: Evaluation covered only windowed classification metrics, omitting control-oriented
+            measures (target-acquisition completion rate, throughput, Fitts'-law path efficiency). And no proportional-control regression path was implemented.</li>
+          <li>No domain adaptation: The cross-subject collapse exposed the core open problem, but there was no recalibration
+            or transfer-learning mechanism to counter electrode shift and session-to-session drift.</li>
+          <li>Feature/model scope: Only time-domain features were wired in (no frequency-domain, AR, or wavelet features),
+            and no deep architectures beyond ROCKET. MiniRocket gave only pseudo-probabilities, weakening confidence-based rejection there.</li>
+          <li>Absent amputee validation: Nothing was run on Ninapro DB3/DB7, intact-subject and amputee EMG differ materially.</li>
+        </ul>
+
+        <p><a class="link" href="https://github.com/ayafareeq" target="_blank" rel="noopener">GitHub</a></p>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-emg">
+      <figure><img src="EMG Process Board-selection.png" alt="EMG processing board and feature pipeline" loading="lazy" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-pipe" role="dialog" aria-modal="true" aria-labelledby="pipe-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Soft Robotics</p>
+    <h1 id="pipe-h">Soft Robotics for Pipe Inspection</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year</dt><dd>2024–2025</dd>
+        <dt>Category</dt><dd>Soft robotics, sensing, control</dd>
+        <div class="gap"></div>
+        <dt>Type</dt><dd>MECH3895 individual project</dd>
+        <dt>Tools</dt><dd>SolidWorks, MATLAB, KiCad, Arduino, silicone casting, 3D printing</dd>
+      </dl>
+
+      <div class="prose">
+        <p>This project aimed to investigate the validity of using low-cost, commercially available conductive
+        textile as reliable sensors for proprioceptive feedback in soft robotics. The investigation was done using a bio-inspired
+        inchworm robot for pipeline inspection. Soft robots are best suitable for confined, irregular
+        tubular environments where rigid inspection usually fails, but they lack effective
+        internal sensing because traditional sesnors are stiff which compromise their compliance.</p>
+
+        <p>The project combined experimental sensor characterisation, numerical analysis of the silicone hyperelasticity, mechanical design and
+        fabrication, and embedded control to build and test a three-chamber pneumatically
+        actuated inchworm robot with an onboard endoscope.</p>
+
+        <h2>Highlights</h2>
+        <ul>
+          <li>The three silver-coated knitted fabrics were electromechanically characterised for 
+              their strain-resistance response, with a focus on repeatability and hysteresis.</li>
+          <li>Custom signal conditioning was implemented with constant-current sources and Sallen-Key active
+              low-pass filters, scaled to an eight-sensor array.</li>
+          <li>Mooney-Rivlin hyperelastic modelling was implemented for the silicone actuators 
+              and it was validated in MATLAB.</li>
+          <li>Discrete-time PID controller was simulated in MATLAB, and deployed on an Arduino
+              Mega alongside bang-bang logic and tested on a balloon.</li>
+        </ul>
+
+        <h2>Results</h2>
+        <ul>
+          <li>The electroLycra proved the most repeatable fabric, tolerant of strain beyond its
+              rated limit due to a uniform loop structure.</li>
+          <li>The course-direction strain gave the most usable sensing range across all
+              three fabrics.</li>
+          <li>The PID controller converged with a stable, damped response
+              (K<sub>p</sub> = 2, K<sub>d</sub> = 0.6, K<sub>i</sub> = 1) and ran correctly on hardware.</li>
+          <li>Structure, actuators and three-phase locomotion logic were all designed,
+              fabricated and coded.</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>The low fabric resistance: causing near-short conditions that overloaded the
+              conditioning circuits when embedded.</li>
+          <li>Incompatible adhesive: it damaged the conductive paths, and mould inaccuracies caused
+              persistent air leaks.</li>
+          <li>No full-system demonstration: due to insufficient actuator inflation the full system could not be demonstrated. The closed-loop
+              control was validated on a balloon instead.</li>
+          <li>Raw endoscope feed: There was no image processing, due to the project's time limitations.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="gallery" data-gallery="p-pipe">
+      <figure><img src="Pipeline Robot Board v5-selection.png" alt="Inchworm robot — structure, actuators and sensor array" loading="lazy" /></figure>
+      <div class="count"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sheet project" id="p-arch" role="dialog" aria-modal="true" aria-labelledby="arch-h">
+  <button class="close" data-close type="button">Close</button>
+  <div class="inner">
+    <p class="eyebrow">Solution Architectures</p>
+    <h1 id="arch-h">Architectures for Enterprise Clients</h1>
+    <div class="cols">
+
+      <dl class="meta">
+        <dt>Year</dt><dd>2026 — present</dd>
+        <dt>Category</dt><dd>Solution architecture</dd>
+        <div class="gap"></div>
+        <dt>Type</dt><dd>Professional</dd>
+        <dt>Role</dt><dd>Solutions engineer</dd>
+      </dl>
+
+      <div class="prose">
+        <p>Solution architectures developed and technically presented to clients in a pre-sales
+          engineering role. Details are limited due to client confidentiality requirements.</p>
+        <ul>
+          <li>Seismic data backup &amp; archival - An automated backup and long-term archival of large-scale seismic data.</li>
+          <li>Smart border security &amp; detection - Anintelligent security, monitoring and detection architecture.</li>
+          <li>Centralized data management &amp; data centre - A centralized infrastructure and data management architecture.</li>
+          <li>Digital examination platform — A secure, scalable architecture for large-scale digital examinations.</li>
+          <li>Smart asset management &amp; alerting — A data centre asset monitoring, management and mobile alerting.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  const intro  = document.getElementById('intro');
+  const stage  = document.getElementById('stage');
+  const word   = document.getElementById('greet-word');
+  const GREET  = ['Hello','مرحبا','سڵاو','Bonjour','こんにちは','Hola','안녕하세요','Olá','Привет','नमस्ते','Ciao','Hallo','Merhaba'];
+
+  function endIntro(){
+    if (intro.hidden) return;
+    clearInterval(timer);
+    stage.classList.add('in');
+    if (reduced){ intro.hidden = true; return; }
+    intro.classList.add('out');
+    intro.addEventListener('transitionend', () => { intro.hidden = true; }, {once:true});
+  }
+
+  const seen = (k, v) => { try { const r = sessionStorage.getItem(k); if (v) sessionStorage.setItem(k, v); return r; } catch(e){ return null; } };
+
+  let timer = 0;
+  if (seen('intro') || reduced){
+    intro.hidden = true;
+    stage.classList.add('in');
+  } else {
+    seen('intro','1');
+    let i = 0;
+    word.textContent = GREET[0];
+    word.setAttribute('dir', 'auto');
+    timer = setInterval(() => {
+      i++;
+      if (i >= GREET.length){ endIntro(); return; }
+      word.textContent = GREET[i];
+    }, 150);
+  }
+  document.getElementById('intro-skip').addEventListener('click', endIntro);
+
+  const pts = Array.from(document.querySelectorAll('.pt'));
+  let lastFocus = null;
+
+  function closeAll(push){
+    const open = document.querySelector('.sheet.open');
+    if (!open) return;
+    open.classList.remove('open');
+    document.body.classList.remove('locked');
+    if (push !== false && location.hash) history.pushState('', '', location.pathname);
+    if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+  }
+
+  function openSheet(id, push){
+    const sheet = id && document.getElementById(id);
+    if (!sheet || !sheet.classList.contains('sheet')) return;
+    lastFocus = document.activeElement;
+    closeAll(false);
+    sheet.classList.add('open');
+    sheet.scrollTop = 0;
+    document.body.classList.add('locked');
+    sheet.querySelector('.close').focus({preventScroll:true});
+    if (push !== false) history.pushState('', '', '#' + id);
+    loadMath(sheet);
+  }
+
+  let mathReady = false;
+  function loadMath(sheet){
+    if (mathReady || !/\\\(|\$/.test(sheet.textContent)) return;
+    mathReady = true;
+    window.MathJax = { tex:{ inlineMath:[['\\(','\\)'],['$','$']] } };
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+    document.head.appendChild(s);
+  }
+
+  const readout = document.getElementById('readout');
+
+  pts.forEach(p => {
+    const x = +p.dataset.x, y = +p.dataset.y;
+    p.style.left = x + '%';
+    p.style.top  = y + '%';
+    if (x > 55) p.classList.add('flip');
+    if (y > 55) p.classList.add('up');
+    p.setAttribute('aria-label', p.querySelector('.name').textContent.trim());
+
+    const src = p.dataset.preview;
+    let img = null;
+    function preview(){
+      if (img || !src) return;
+      img = document.createElement('img');
+      img.className = 'preview';
+      img.alt = '';
+      img.decoding = 'async';
+      img.addEventListener('error', () => img.remove());
+      img.src = src;
+      p.appendChild(img);
+    }
+
+    function show(){
+      preview();
+      readout.textContent =
+        p.dataset.cat + ' · ' +
+        (x < 50 ? 'Human body ' + (50 - x) * 2 : 'Field ' + (x - 50) * 2) + ' · ' +
+        (y < 50 ? 'Software ' + (50 - y) * 2 : 'Hardware ' + (y - 50) * 2);
+      readout.classList.add('on');
+    }
+    function hide(){ readout.classList.remove('on'); }
+
+    p.addEventListener('pointerenter', show);
+    p.addEventListener('focus', show);
+    p.addEventListener('pointerleave', hide);
+    p.addEventListener('blur', hide);
+    p.addEventListener('click', () => openSheet(p.dataset.sheet));
+  });
+
+  const arch   = document.getElementById('arch-list');
+  const mobile = document.getElementById('mobile-list');
+  pts.forEach(p => {
+    const title = p.querySelector('.name').textContent.trim();
+    const row = '<a href="#' + p.dataset.sheet + '">' + title +
+                '<span class="cat">' + p.dataset.cat + '</span></a>';
+    [arch, mobile].forEach(list => {
+      const li = document.createElement('li');
+      li.innerHTML = row;
+      list.appendChild(li);
+    });
+  });
+
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href').slice(1);
+    if (!document.getElementById(id)) return;
+    e.preventDefault();
+    openSheet(id);
+  });
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => closeAll()));
+
+  function fromHash(){
+    const id = location.hash.slice(1);
+    if (id) openSheet(id, false); else closeAll(false);
+  }
+  window.addEventListener('popstate', fromHash);
+  window.addEventListener('hashchange', fromHash);
+  if (location.hash) fromHash();
+
+  const PROJECT_IMAGES = {
+    'p-unet':   ['Results Collage-selection-crop.png'],
+    'p-eeg':    ['EEG Collage-selection.png'],
+    'p-vision': [],
+    'p-emg':    ['EMG Process Board-selection.png'],
+    'p-pipe':   ['Pipeline Robot Board v5-selection.png'],
+    'p-arch':   []
+  };
+
+  document.querySelectorAll('.gallery[data-gallery]').forEach(gal => {
+    const shot  = gal.querySelector('img');
+    const count = gal.querySelector('.count');
+    let list = (PROJECT_IMAGES[gal.dataset.gallery] || []).slice();
+    let idx  = 0;
+
+    function hide(){ gal.style.display = 'none'; }
+    function render(n){
+      if (!list.length) return hide();
+      gal.style.display = '';
+      idx = (n + list.length) % list.length;
+      shot.src = list[idx];
+      count.textContent = list.length > 1 ? (idx + 1) + ' / ' + list.length : '';
+    }
+    shot.addEventListener('error', () => {
+      list.splice(idx, 1);
+      if (!list.length) hide(); else render(idx);
+    });
+    shot.addEventListener('click', () => render(idx + 1));
+    gal._nav = dir => render(idx + dir);
+    render(0);
+  });
+
+  document.addEventListener('keydown', e => {
+    const open = document.querySelector('.sheet.open');
+    if (e.key === 'Escape'){ closeAll(); return; }
+    if (!open) return;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+      const gal = open.querySelector('.gallery[data-gallery]');
+      if (gal && gal._nav) gal._nav(e.key === 'ArrowRight' ? 1 : -1);
+      return;
+    }
+    if (e.key === 'Tab'){
+      const f = open.querySelectorAll('a[href], button');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
